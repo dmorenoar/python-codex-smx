@@ -122,7 +122,7 @@
         <aside id="sidebar" class="sidebar w-64 bg-[#1e1e1e] flex flex-col border-r border-gray-800 transition-all duration-300">
             <div class="p-6 border-b border-gray-800 hidden md:block">
                 <h1 class="text-xl text-green-400 mb-1 pixel-font leading-relaxed">PYTHON<br>QUEST</h1>
-                <p class="text-xs text-gray-500 code-font">v2.9.1 [FIX-QUOTES]</p>
+                <p class="text-xs text-gray-500 code-font">v3.3.0 [FULL-ITER]</p>
             </div>
 
             <nav class="flex-1 overflow-y-auto p-4 space-y-2">
@@ -135,14 +135,14 @@
                 <button onclick="switchTab('io_vars')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3 active-nav">
                     <span>🎒</span> I/O i Variables
                 </button>
-                <button onclick="switchTab('strings')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
-                    <span>📜</span> Cadenes (Strings)
-                </button>
                 <button onclick="switchTab('control')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
                     <span>🛤️</span> Control de Flux
                 </button>
                 <button onclick="switchTab('loops')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
                     <span>🔄</span> Bucles (Repetició)
+                </button>
+                <button onclick="switchTab('strings')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                    <span>📜</span> Cadenes (Strings)
                 </button>
                 <button onclick="switchTab('functions')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
                     <span>✨</span> Funcions
@@ -414,15 +414,23 @@
                         runnable: true
                     },
                     {
-                        title: "2. Repetició i Longitud",
+                        title: "2. Mesurar el Pergamí (Length)",
                         type: "code",
-                        content: "Multiplicar text o saber quan ocupa un missatge.",
-                        code: `print("*" * 10) # Mur de 10 estrelles\nprint("A" * 3)  # AAA\n\nmanga = "One Piece"\nprint(f"Llargada: {len(manga)}")`,
-                        explanation: "len() compta tots els caràcters, inclosos els espais.",
+                        content: "Saber quants caràcters té una cadena (inclosos espais i símbols).",
+                        code: `manga = "One Piece"\nprint(f"Longitud: {len(manga)}") # 9\n\n# Els espais compten!\nbuit = ""\nprint(len(buit)) # 0`,
+                        explanation: "La funció len() retorna un enter (int) amb el recompte total.",
                         runnable: true
                     },
                     {
-                        title: "3. Accés a Caràcters",
+                        title: "3. Repetició Màgica",
+                        type: "code",
+                        content: "Multiplicar text per fer separadors o efectes.",
+                        code: `print("*" * 10) # Mur de 10 estrelles\nprint("Hola" * 3)  # HolaHolaHola`,
+                        explanation: "Pots multiplicar un text per un número, però no pots sumar text amb número.",
+                        runnable: true
+                    },
+                    {
+                        title: "4. Accés a Caràcters",
                         type: "code",
                         content: "Llegir una lletra específica del pergamí.",
                         code: `anime = "Kimetsu"\nprint(f"Primera: {anime[0]}")  # K\nprint(f"Tercera: {anime[2]}")  # m\nprint(f"Última: {anime[-1]}")  # u`,
@@ -430,7 +438,7 @@
                         runnable: true
                     },
                     {
-                        title: "4. Subcadenes (Slicing)",
+                        title: "5. Subcadenes (Slicing)",
                         type: "code",
                         content: "Retallar un tros del missatge.",
                         code: `film = "The Lord of the Rings"\nprint(film[0:4])   # "The "\nprint(film[4:8])   # "Lord"\nprint(film[12:])   # "the Rings"`,
@@ -438,7 +446,7 @@
                         runnable: true
                     },
                     {
-                        title: "5. Mètodes de Format",
+                        title: "6. Mètodes de Format",
                         type: "code",
                         content: "Canviar l'estil del text.",
                         code: `msg = "  Atac Aeri  "\n\nprint(msg.upper())        # MAJÚSCULES\nprint(msg.lower())        # minúscules\nprint(msg.strip())        # Esborra espais extres\nprint(msg.replace("A", "X")) # Canvia lletres`,
@@ -446,7 +454,7 @@
                         runnable: true
                     },
                     {
-                        title: "6. Validació i Cerca",
+                        title: "7. Validació i Cerca",
                         type: "code",
                         content: "Comprovar si un text compleix les normes.",
                         code: `pass = "12345"\nif pass.isdigit():\n    print("Password numèric OK")\n\nfrase = "Caga tió"\nif "tió" in frase:\n    print("Tió trobat a la posició:", frase.find("tió"))`,
@@ -505,6 +513,15 @@
                 aea: "AEA4 i AEA6 (18h)",
                 cards: [
                     {
+                        title: "Tàctica: FOR vs WHILE",
+                        type: "table",
+                        content: "Quan utilitzar cada eina.",
+                        tableRows: [
+                            ["FOR", "Iteracions conegudes", "Recórrer llistes, rangs fixos", "Inventari, Puntuacions"],
+                            ["WHILE", "Incerta / Condicional", "Esperar input, esdeveniments", "Menú principal, Game Loop"]
+                        ]
+                    },
+                    {
                         title: "1. Bucle FOR (Seqüències)",
                         type: "code",
                         content: "Recórrer cadenes de text o llistes element per element.",
@@ -561,15 +578,6 @@
                         runnable: false
                     },
                     {
-                        title: "Tàctica: FOR vs WHILE",
-                        type: "table",
-                        content: "Quan utilitzar cada eina.",
-                        tableRows: [
-                            ["FOR", "Iteracions conegudes", "Recórrer llistes, rangs fixos", "Inventari, Puntuacions"],
-                            ["WHILE", "Incerta / Condicional", "Esperar input, esdeveniments", "Menú principal, Game Loop"]
-                        ]
-                    },
-                    {
                         title: "Personalitzar HUD (Print)",
                         type: "code",
                         content: "Configurar com es mostren les dades amb `sep` i `end`.",
@@ -602,7 +610,15 @@
                         runnable: true
                     },
                     {
-                        title: "3. Slot Ràpid (Slicing)",
+                        title: "3. Recórrer l'Inventari (Llistes)",
+                        type: "code",
+                        content: "Revisar tots els objectes un per un (Bucle).",
+                        code: `inventari = ["Espasa", "Poció", "Mapa"]\n\n# Opció 1: Directe\nfor objecte in inventari:\n    print(f"- {objecte}")\n\n# Opció 2: Amb número (enumerate)\nfor i, objecte in enumerate(inventari):\n    print(f"Slot {i}: {objecte}")`,
+                        explanation: "Utilitza 'enumerate' si necessites saber la posició (slot) de l'objecte.",
+                        runnable: true
+                    },
+                    {
+                        title: "4. Slot Ràpid (Slicing)",
                         type: "code",
                         content: "Agafar només una part de la llista (sub-llista).",
                         code: `cofre = ["A", "B", "C", "D", "E"]\n\n# Del principi fins al 3 (exclòs)\nprimers = cofre[:3] # A, B, C\n\n# Del 2 fins al final\nresta = cofre[2:] # C, D, E`,
@@ -610,7 +626,7 @@
                         runnable: true
                     },
                     {
-                        title: "4. Coordenades (Tuples)",
+                        title: "5. Coordenades (Tuples)",
                         type: "code",
                         content: "Llistes IMMUTABLES. No es poden canviar un cop creades.",
                         code: `spawn_point = (100, 200)\nprint(f"X: {spawn_point[0]}")\n\n# spawn_point[0] = 50 -> ERROR!\n# No pots moure el punt d'aparició!`,
@@ -618,7 +634,7 @@
                         runnable: true
                     },
                     {
-                        title: "5. Fitxa de Personatge (Diccionaris)",
+                        title: "6. Fitxa de Personatge (Diccionaris)",
                         type: "code",
                         content: "Dades etiquetades (Clau: Valor). No tenen ordre, tenen noms.",
                         code: `heroi = {\n  "nom": "Link",\n  "vida": 100,\n  "mana": 50\n}\n\nprint(f"L'heroi {heroi['nom']} té {heroi['vida']} HP.")`,
@@ -626,11 +642,27 @@
                         runnable: true
                     },
                     {
-                        title: "6. Actualitzar Stats (Dicts)",
+                        title: "7. Llegir el Bestiari (Recórrer Diccionaris)",
+                        type: "code",
+                        content: "Extreure informació de claus i valors.",
+                        code: `stats = {"ATK": 10, "DEF": 5, "SPD": 8}\n\n# Només claus\nfor stat in stats.keys():\n    print(stat)\n\n# Tot junt (.items())\nfor stat, valor in stats.items():\n    print(f"{stat}: {valor}")`,
+                        explanation: ".items() et dona la parella (Clau, Valor) en cada volta del bucle.",
+                        runnable: true
+                    },
+                    {
+                        title: "8. Actualitzar Stats (Dicts)",
                         type: "code",
                         content: "Modificar valors o afegir noves característiques.",
                         code: `stats = {"atk": 10, "def": 5}\n\n# Pujar de nivell (Modificar)\nstats["atk"] = 15\n\n# Aprendre màgia (Afegir nou)\nstats["magia"] = 20\n\nprint(stats)`,
                         explanation: "Si la clau existeix, l'actualitza. Si no, la crea.",
+                        runnable: true
+                    },
+                    {
+                        title: "9. Revisar Assoliments (Sets)",
+                        type: "code",
+                        content: "Recórrer conjunts (Recorda: No tenen ordre!).",
+                        code: `assoliments = {"Primera Sang", "Mestre d'Espasa"}\n\nfor trofeu in assoliments:\n    print(f"Desbloquejat: {trofeu}")\n\n# No pots fer assoliments[0], no tenen índex!`,
+                        explanation: "Els sets són com una bossa desordenada. Pots treure coses, però no saps en quin ordre sortiran.",
                         runnable: true
                     }
                 ]
@@ -785,6 +817,7 @@
                         alt: "Infografia Diccionaris"
                     },
                     {
+                        // Safe title with escaped single quote
                         title: "10. Llibre d'Assoliments (Sets)",
                         type: "image",
                         content: "Col·leccions sense duplicats. Màgia avançada i elements únics.",
@@ -875,7 +908,7 @@
 
                     // 2. Highlight Keywords in the remaining code (safe now)
                     code = code
-                        .replace(/\b(print|input|len|range|append|int|str|float|remove|insert)\b/g, '<span class="token-func">$1</span>')
+                        .replace(/\b(print|input|len|range|append|int|str|float|remove|insert|enumerate|keys|values|items)\b/g, '<span class="token-func">$1</span>')
                         .replace(/\b(if|else|elif|for|while|in|def|return)\b/g, '<span class="token-keyword">$1</span>');
 
                     // 3. Restore Strings and Comments wrapped in their spans
@@ -968,6 +1001,10 @@
             else if(cardData.code.includes('spawn_point')) outputText += "X: 100";
             else if(cardData.code.includes('heroi[')) outputText += "L'heroi Link té 100 HP.";
             else if(cardData.code.includes('stats["magia"]')) outputText += "{'atk': 15, 'def': 5, 'magia': 20}";
+            else if(cardData.code.includes('enumerate(inventari)')) outputText += "Slot 0: Espasa\nSlot 1: Poció\nSlot 2: Mapa";
+            else if(cardData.code.includes('stats.items()')) outputText += "ATK: 10\nDEF: 5\nSPD: 8";
+            else if(cardData.code.includes('assoliments = {')) outputText += "Desbloquejat: Primera Sang\nDesbloquejat: Mestre d'Espasa";
+
 
             else if(cardData.code.includes('motxilla')) outputText += "Espasa";
             else if(cardData.code.includes('jugador')) outputText += "Link";
@@ -981,10 +1018,11 @@
             
             // Strings Specific Handlers (NEW)
             else if(cardData.code.includes('vas néixer el')) outputText += "Hola Dani, vas néixer el 1987";
-            else if(cardData.code.includes('**********')) outputText += "**********\nAAA\nLlargada: 9";
+            else if(cardData.code.includes('len(manga)')) outputText += "Longitud: 9\n0";
+            else if(cardData.code.includes('"*" * 10')) outputText += "**********\nHolaHolaHola";
             else if(cardData.code.includes('Kimetsu')) outputText += "Primera: K\nTercera: m\nÚltima: u";
             else if(cardData.code.includes('Lord of the Rings')) outputText += "The \nLord\nthe Rings";
-            else if(cardData.code.includes('ATAC AERI')) outputText += "ATAC AERI\natac aeri\nAtac Aeri\n  Xtxc Aeri  ";
+            else if(cardData.code.includes('msg.upper()')) outputText += "ATAC AERI\natac aeri\nAtac Aeri\n  Xtxc Aeri  ";
             else if(cardData.code.includes('isdigit')) outputText += "Password numèric OK\nTió trobat a la posició: 5";
 
             // Loop Specific Handlers
