@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Quest: El Còdex</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Font for Gamer Feel */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --bg-dark: #121212;
+            --bg-card: #1e1e1e;
+            --accent-green: #00E676;
+            --accent-purple: #BB86FC;
+            --text-main: #E0E0E0;
+            --text-dim: #A0A0A0;
+            --danger: #CF6679;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        h1, h2, h3, .pixel-font {
+            font-family: 'Press Start 2P', cursive;
+            letter-spacing: -1px;
+        }
+
+        .code-font {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-green);
+        }
+
+        /* Neon Glow Effects */
+        .neon-border-green {
+            box-shadow: 0 0 5px var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+        .neon-border-purple {
+            box-shadow: 0 0 5px var(--accent-purple);
+            border: 1px solid var(--accent-purple);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 300px;
+        }
+
+        /* Syntax Highlighting Simulation */
+        .token-keyword { color: #BB86FC; font-weight: bold; }
+        .token-string { color: #00E676; }
+        .token-func { color: #03DAC6; }
+        .token-number { color: #CF6679; }
+        .token-comment { color: #666; font-style: italic; }
+
+        .console-output {
+            border-left: 3px solid var(--accent-green);
+            background: #000;
+            padding: 10px;
+            font-family: 'Roboto Mono', monospace;
+            color: #ccc;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Sidebar toggle */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .sidebar.active {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 50;
+                background: var(--bg-dark);
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Navbar Mobile -->
+    <div class="md:hidden flex justify-between items-center p-4 border-b border-gray-800 bg-[#1e1e1e]">
+        <span class="pixel-font text-green-400 text-xs">PYTHON QUEST</span>
+        <button id="menuBtn" class="text-white focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+        </button>
+    </div>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="sidebar w-64 bg-[#1e1e1e] flex flex-col border-r border-gray-800 transition-all duration-300">
+            <div class="p-6 border-b border-gray-800 hidden md:block">
+                <h1 class="text-xl text-green-400 mb-1 pixel-font leading-relaxed">PYTHON<br>QUEST</h1>
+                <p class="text-xs text-gray-500 code-font">v2.3.0 [MENU-SORT]</p>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+                <button onclick="switchTab('dashboard')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                    <span>📊</span> Resum de Missió
+                </button>
+                
+                <div class="pt-4 pb-2 text-xs font-bold text-gray-500 uppercase tracking-wider px-4">El Còdex (Apunts)</div>
+                
+                <button onclick="switchTab('io_vars')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                    <span>🎒</span> I/O i Variables
+                </button>
+                <button onclick="switchTab('control')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                    <span>🛤️</span> Control de Flux
+                </button>
+                <button onclick="switchTab('loops')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                    <span>🔄</span> Bucles (Repetició)
+                </button>
+                <!-- Moved Strings here -->
+                <button onclick="switchTab('strings')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3 active-nav">
+                    <span>📜</span> Cadenes (Strings)
+                </button>
+                <button onclick="switchTab('functions')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                    <span>✨</span> Funcions
+                </button>
+                <button onclick="switchTab('data')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                    <span>📚</span> Estructures Dades
+                </button>
+                <button onclick="switchTab('bugs')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                    <span>☣️</span> Zona d'Errors
+                </button>
+
+                <div class="pt-4 pb-2 text-xs font-bold text-gray-500 uppercase tracking-wider px-4">Utilitats</div>
+                
+                <button onclick="switchTab('calculator')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                    <span>🧮</span> Calculadora Notes
+                </button>
+            </nav>
+
+            <div class="p-4 border-t border-gray-800">
+                <div class="text-xs text-gray-500 mb-2">Estat del Sistema</div>
+                <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                    <div class="bg-green-500 h-full" style="width: 100%"></div>
+                </div>
+                <div class="flex justify-between text-xs mt-1 text-green-400">
+                    <span>ONLINE</span>
+                    <span>66H TOTAL</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-[#121212] p-4 md:p-8 relative">
+            
+            <!-- Dashboard View -->
+            <div id="dashboard" class="content-section">
+                <header class="mb-8">
+                    <h2 class="text-2xl md:text-3xl text-white mb-2 pixel-font">Panell de Control</h2>
+                    <p class="text-gray-400">Resum del Mòdul "Introducció a la Programació" (66h)</p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Progress Chart -->
+                    <div class="bg-[#1e1e1e] p-6 rounded-lg border border-gray-800 shadow-lg">
+                        <h3 class="text-lg text-purple-400 mb-4 font-bold">🗺️ Mapa d'Activitats (AEAs)</h3>
+                        <div class="chart-container">
+                            <canvas id="hoursChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-4 text-center">Distribució d'hores segons document oficial</p>
+                    </div>
+
+                    <!-- Info Cards -->
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="bg-[#1e1e1e] p-5 rounded-lg border-l-4 border-green-500 shadow-lg">
+                            <h4 class="text-white font-bold mb-1">Missió Principal</h4>
+                            <p class="text-sm text-gray-400">Aprendre Python mitjançant gamificació (Reeborg/Snakify) i projectes pràctics.</p>
+                        </div>
+                        <div class="bg-[#1e1e1e] p-5 rounded-lg border-l-4 border-purple-500 shadow-lg">
+                            <h4 class="text-white font-bold mb-1">Avaluació</h4>
+                            <p class="text-sm text-gray-400">2 Resultats d'Aprenentatge (RA1 i RA2). Necessites >4 als exàmens per fer mitjana.</p>
+                        </div>
+                        <div class="bg-[#1e1e1e] p-5 rounded-lg border-l-4 border-yellow-500 shadow-lg">
+                            <h4 class="text-white font-bold mb-1">Eines</h4>
+                            <ul class="text-sm text-gray-400 list-disc ml-4 mt-2">
+                                <li>Visual Studio Code</li>
+                                <li>Google Colab</li>
+                                <li>Reeborg's World</li>
+                                <li>Snakify</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generic Category Template (Will be populated by JS) -->
+            <div id="codex-view" class="content-section hidden">
+                <header class="mb-6 flex justify-between items-end border-b border-gray-800 pb-4">
+                    <div>
+                        <div class="flex items-center gap-3 mb-1">
+                            <span id="cat-icon" class="text-3xl">🎒</span>
+                            <h2 id="cat-title" class="text-2xl md:text-3xl text-green-400 pixel-font">Títol</h2>
+                        </div>
+                        <h3 id="cat-subtitle" class="text-lg text-purple-400 mb-2 pixel-font pl-1">Subtítol</h3>
+                        <p id="cat-desc" class="text-gray-400 max-w-2xl">Descripció de la categoria.</p>
+                    </div>
+                    <div class="hidden md:block text-right">
+                        <span id="cat-aea" class="text-xs bg-purple-900 text-purple-200 px-2 py-1 rounded border border-purple-500">AEA Relacionat</span>
+                    </div>
+                </header>
+
+                <!-- Concepts Grid -->
+                <div id="concepts-grid" class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <!-- Cards will be injected here -->
+                </div>
+            </div>
+
+            <!-- Calculator View -->
+            <div id="calculator" class="content-section hidden">
+                <header class="mb-8">
+                    <h2 class="text-2xl md:text-3xl text-white mb-2 pixel-font">Simulador de Notes 🧮</h2>
+                    <p class="text-gray-400">Calcula la teva nota final basada en les fórmules oficials del document SMX.</p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <!-- RA1 Calculator -->
+                        <div class="bg-[#1e1e1e] p-6 rounded-lg border border-gray-700">
+                            <h3 class="text-lg text-green-400 mb-4 border-b border-gray-700 pb-2">Resultat Aprenentatge 1 (24h)</h3>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Pt1 (10%)</label>
+                                    <input type="number" id="pt1" class="w-full bg-[#121212] border border-gray-600 rounded p-2 text-white focus:border-green-500 outline-none" placeholder="0-10">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Pt2 (10%)</label>
+                                    <input type="number" id="pt2" class="w-full bg-[#121212] border border-gray-600 rounded p-2 text-white focus:border-green-500 outline-none" placeholder="0-10">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Pt3 (10%)</label>
+                                    <input type="number" id="pt3" class="w-full bg-[#121212] border border-gray-600 rounded p-2 text-white focus:border-green-500 outline-none" placeholder="0-10">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Pt4 (10%)</label>
+                                    <input type="number" id="pt4" class="w-full bg-[#121212] border border-gray-600 rounded p-2 text-white focus:border-green-500 outline-none" placeholder="0-10">
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-xs text-purple-400 mb-1 font-bold">Prova P1 (60%) - Boss Final!</label>
+                                <input type="number" id="p1" class="w-full bg-[#121212] border border-purple-500 rounded p-2 text-white focus:border-purple-300 outline-none" placeholder="0-10">
+                            </div>
+                            <div class="text-right">
+                                <span class="text-gray-400 text-sm">Nota RA1: </span>
+                                <span id="ra1-result" class="text-2xl font-bold text-white pixel-font">0.0</span>
+                            </div>
+                        </div>
+
+                        <!-- RA2 Calculator -->
+                        <div class="bg-[#1e1e1e] p-6 rounded-lg border border-gray-700">
+                            <h3 class="text-lg text-green-400 mb-4 border-b border-gray-700 pb-2">Resultat Aprenentatge 2 (42h)</h3>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Pt5 (10%)</label>
+                                    <input type="number" id="pt5" class="w-full bg-[#121212] border border-gray-600 rounded p-2 text-white focus:border-green-500 outline-none" placeholder="0-10">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Pt6 (10%)</label>
+                                    <input type="number" id="pt6" class="w-full bg-[#121212] border border-gray-600 rounded p-2 text-white focus:border-green-500 outline-none" placeholder="0-10">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Pt7 (10%)</label>
+                                    <input type="number" id="pt7" class="w-full bg-[#121212] border border-gray-600 rounded p-2 text-white focus:border-green-500 outline-none" placeholder="0-10">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Pt8 (10%)</label>
+                                    <input type="number" id="pt8" class="w-full bg-[#121212] border border-gray-600 rounded p-2 text-white focus:border-green-500 outline-none" placeholder="0-10">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-xs text-purple-400 mb-1 font-bold">Prova P2 (20%)</label>
+                                    <input type="number" id="p2" class="w-full bg-[#121212] border border-purple-500 rounded p-2 text-white focus:border-purple-300 outline-none" placeholder="0-10">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-yellow-400 mb-1 font-bold">Projecte Pr1 (40%)</label>
+                                    <input type="number" id="pr1" class="w-full bg-[#121212] border border-yellow-500 rounded p-2 text-white focus:border-yellow-300 outline-none" placeholder="0-10">
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-gray-400 text-sm">Nota RA2: </span>
+                                <span id="ra2-result" class="text-2xl font-bold text-white pixel-font">0.0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Final Result -->
+                    <div class="bg-[#1e1e1e] p-6 rounded-lg border border-gray-700 h-fit">
+                        <h3 class="text-lg text-white mb-6 font-bold text-center">Nota Final del Mòdul</h3>
+                        <div class="chart-container" style="height: 250px;">
+                            <canvas id="gradeChart"></canvas>
+                        </div>
+                        <div class="text-center mt-6">
+                            <div id="final-grade-display" class="text-5xl font-bold text-gray-600 pixel-font">--</div>
+                            <p id="status-message" class="text-sm mt-2 text-gray-500">Introdueix totes les notes per calcular.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA STORE ---
+        const codexData = {
+            'io_vars': {
+                title: "I/O i Variables",
+                subtitle: "L'Inventari i el Xat",
+                desc: "Aquí aprenem a guardar coses a la memòria (la teva motxilla) i a comunicar-nos amb el jugador.",
+                aea: "AEA3 (8h)",
+                cards: [
+                    {
+                        title: "1. Sortida Bàsica (Print)",
+                        type: "command",
+                        content: "El Crit. Mostra un missatge a la pantalla.",
+                        code: `print("Hola, món!")`,
+                        explanation: "Simplement mostra text. Recorda les cometes!",
+                        runnable: true
+                    },
+                    {
+                        title: "2. Els 4 Tipus de Dades",
+                        type: "table",
+                        content: "Python necessita saber què hi ha a la caixa (variable).",
+                        tableRows: [
+                            ["int", "Enter", "10, -5", "Vides, Nivell"],
+                            ["float", "Decimal", "9.5, 3.14", "Velocitat"],
+                            ["str", "String", "\"A\", \"Text\"", "Noms, Xat"],
+                            ["bool", "Booleà", "True, False", "Interruptors"]
+                        ]
+                    },
+                    {
+                        title: "3. Unir Text i Variables",
+                        type: "code",
+                        content: "Com barrejar text i dades. Hi ha 3 formes:",
+                        code: `nom = "Anna"\nedat = 16\n\n# A. Coma (Automàtic: Posa espais)\nprint("Et dius", nom, "i tens", edat, "anys.")\n\n# B. Suma (Manual: No espais, cal str())\n# print("Tens " + edat) -> ERROR!\nprint("Tens " + str(edat) + " anys.")\n\n# C. f-strings (Recomanat: Modern)\nprint(f"Et dius {nom} i tens {edat} anys.")`,
+                        explanation: "L'opció f-string (posant la f al principi) és la més neta.",
+                        runnable: true
+                    },
+                    {
+                        title: "4. Entrada de Text (input)",
+                        type: "command",
+                        content: "Llegir paraules o frases del jugador.",
+                        code: `nom = input("Com et dius? ")\nprint(f"Encantat, {nom}!")`,
+                        explanation: "Tot el que llegeix input() es guarda com a text (String).",
+                        runnable: true
+                    },
+                    {
+                        title: "5. Entrada de Números",
+                        type: "code",
+                        content: "Si vols fer mates, has de convertir (castejar) el text.",
+                        code: `# Enter (int)\nedat = int(input("Quants anys tens? "))\nprint(f"L'any vinent tindràs {edat + 1}")\n\n# Decimal (float)\nalcada = float(input("Alçada en m? "))\nprint(f"Fas {alcada} metres.")`,
+                        explanation: "Si no poses int(), Python sumarà text: '5' + '1' = '51'.",
+                        runnable: true
+                    },
+                    {
+                        title: "6. Exemple Complet",
+                        type: "code",
+                        content: "Tot junt en un sol programa.",
+                        code: `nom = input("Nom: ")\nedat = int(input("Edat: "))\nalcada = float(input("Alçada (m): "))\n\nprint(f"Et dius {nom}, tens {edat} anys i fas {alcada}m.")`,
+                        explanation: "Prova d'introduir dades diferents per veure com canvia el resultat.",
+                        runnable: true
+                    }
+                ]
+            },
+            'strings': {
+                title: "Cadenes de Text",
+                subtitle: "Desxifrant els Pergamins",
+                desc: "Manipulació avançada de text. Aprèn a tallar, enganxar i analitzar missatges del sistema.",
+                aea: "AEA5 (12h)",
+                cards: [
+                    {
+                        title: "1. Concatenació (Crafting)",
+                        type: "code",
+                        content: "Unir fragments de text per crear un missatge nou.",
+                        code: `user = "Dani"\nage = 1987\n\n# Amb suma (+)\ntext = "Hola " + user + ", vas néixer el " + str(age)\nprint(text)\n\n# Amb f-string (Recomanat)\nprint(f"Hola {user}, vas néixer el {age}")`,
+                        explanation: "La suma necessita convertir números a text (str()). La f-string ho fa automàticament.",
+                        runnable: true
+                    },
+                    {
+                        title: "2. Repetició i Longitud",
+                        type: "code",
+                        content: "Multiplicar text o saber quan ocupa un missatge.",
+                        code: `print("*" * 10) # Mur de 10 estrelles\nprint("A" * 3)  # AAA\n\nmanga = "One Piece"\nprint(f"Llargada: {len(manga)}")`,
+                        explanation: "len() compta tots els caràcters, inclosos els espais.",
+                        runnable: true
+                    },
+                    {
+                        title: "3. Accés a Caràcters",
+                        type: "code",
+                        content: "Llegir una lletra específica del pergamí.",
+                        code: `anime = "Kimetsu"\nprint(f"Primera: {anime[0]}")  # K\nprint(f"Tercera: {anime[2]}")  # m\nprint(f"Última: {anime[-1]}")  # u`,
+                        explanation: "Comença a comptar des de 0. Els negatius comencen pel final.",
+                        runnable: true
+                    },
+                    {
+                        title: "4. Subcadenes (Slicing)",
+                        type: "code",
+                        content: "Retallar un tros del missatge.",
+                        code: `film = "The Lord of the Rings"\nprint(film[0:4])   # "The "\nprint(film[4:8])   # "Lord"\nprint(film[12:])   # "the Rings"`,
+                        explanation: "[inici : fi]. El caràcter final no s'inclou.",
+                        runnable: true
+                    },
+                    {
+                        title: "5. Mètodes de Format",
+                        type: "code",
+                        content: "Canviar l'estil del text.",
+                        code: `msg = "  Atac Aeri  "\n\nprint(msg.upper())        # MAJÚSCULES\nprint(msg.lower())        # minúscules\nprint(msg.strip())        # Esborra espais extres\nprint(msg.replace("A", "X")) # Canvia lletres`,
+                        explanation: "Els mètodes retornen una còpia nova, no modifiquen l'original.",
+                        runnable: true
+                    },
+                    {
+                        title: "6. Validació i Cerca",
+                        type: "code",
+                        content: "Comprovar si un text compleix les normes.",
+                        code: `pass = "12345"\nif pass.isdigit():\n    print("Password numèric OK")\n\nfrase = "Caga tió"\nif "tió" in frase:\n    print("Tió trobat a la posició:", frase.find("tió"))`,
+                        explanation: ".find() retorna -1 si no ho troba.",
+                        runnable: true
+                    }
+                ]
+            },
+            'control': {
+                title: "Control de Flux",
+                subtitle: "La Bifurcació del Destí",
+                desc: "El codi llegeix de dalt a baix, però aquí decidim quin camí prendre usant lògica.",
+                aea: "AEA3 i AEA6 (20h)",
+                cards: [
+                    {
+                        title: "Comparadors (El Jutge)",
+                        type: "list",
+                        content: "Símbols per fer preguntes.",
+                        items: [
+                            "== : Igualtat? (Mirall)",
+                            "!= : Diferent?",
+                            "> : Més gran que",
+                            "< : Més petit que"
+                        ]
+                    },
+                    {
+                        title: "1. L'Interruptor (if)",
+                        type: "code",
+                        content: "Només passa si la condició és certa.",
+                        code: `energia = 90\n\nif energia > 80:\n    print("Atac Final!")`,
+                        explanation: "Si l'energia fos 50, no passaria res.",
+                        runnable: true
+                    },
+                    {
+                        title: "2. La Moneda (if/else)",
+                        type: "code",
+                        content: "Una cosa o l'altra. Si és cert fa A, si no, fa B.",
+                        code: `energia = 10\n\nif energia > 80:\n    print("Atac Final!")\nelse:\n    print("Atac Bàsic")`,
+                        explanation: "L'else no porta condició, és 'tota la resta'.",
+                        runnable: true
+                    },
+                    {
+                        title: "3. El Semàfor (if/elif/else)",
+                        type: "code",
+                        content: "Múltiples camins. Python comprova en ordre.",
+                        code: `energia = 50\n\nif energia > 80:\n    print("Atac Final!")\nelif energia > 20:\n    print("Atac Bàsic")\nelse:\n    print("FUGIR!")`,
+                        explanation: "Pots posar tants 'elif' com vulguis.",
+                        runnable: true
+                    }
+                ]
+            },
+            'loops': {
+                title: "Bucles",
+                subtitle: "Estructures de Repetició",
+                desc: "Automatitza tasques repetitives (Grindear). Domina el temps i l'espai amb 'for' i 'while'.",
+                aea: "AEA4 i AEA6 (18h)",
+                cards: [
+                    {
+                        title: "1. Bucle FOR (Seqüències)",
+                        type: "code",
+                        content: "Recórrer cadenes de text o llistes element per element.",
+                        code: `paraula = "QUEST"\nfor lletra in paraula:\n    print(f"Desxifrant: {lletra}")`,
+                        explanation: "El bucle agafa cada caràcter de la 'paraula' un per un.",
+                        runnable: true
+                    },
+                    {
+                        title: "2. Bucle FOR amb Range()",
+                        type: "code",
+                        content: "Repetir un nombre exacte de vegades. Genera una seqüència numèrica.",
+                        code: `# range(inici, fi-1)\nfor nivell in range(1, 4):\n    print(f"Entrant al Nivell {nivell}")\n\n# range(fi-1) -> comença a 0\nfor i in range(3):\n    print("Disparar!")`,
+                        explanation: "Recorda: L'últim número NO s'inclou (range(1,4) fa 1, 2, 3).",
+                        runnable: true
+                    },
+                    {
+                        title: "3. Range Avançat (Pas)",
+                        type: "code",
+                        content: "Comptar de 2 en 2 o enrere (Countdown).",
+                        code: `# range(inici, fi, pas)\nfor i in range(10, 0, -2):\n    print(f"Compte enrere: {i}")\nprint("ENLAIRAMENT!")`,
+                        explanation: "El tercer número és el 'pas' (salt). Si és negatiu, compta enrere.",
+                        runnable: true
+                    },
+                    {
+                        title: "4. Acumulador (Farming)",
+                        type: "code",
+                        content: "Sumar punts o experiència en cada repetició.",
+                        code: `total_xp = 0\nfor xp in range(1, 6):\n    total_xp += xp\n    print(f"Guanyats {xp} XP. Total: {total_xp}")`,
+                        explanation: "`+=` suma el valor a la variable existent.",
+                        runnable: true
+                    },
+                    {
+                        title: "5. Bucle WHILE (Condicional)",
+                        type: "code",
+                        content: "S'executa MENTRE una condició sigui certa. Mode Supervivència.",
+                        code: `monedes = 0\nwhile monedes < 3:\n    print(f"Tens {monedes} monedes. Farmant...")\n    monedes += 1\nprint("Ja tens prou diners!")`,
+                        explanation: "Primer avalua, després executa. Si la condició és False al principi, no s'executa mai.",
+                        runnable: true
+                    },
+                    {
+                        title: "6. Menú amb While",
+                        type: "code",
+                        content: "El bucle clàssic de 'Jugar de nou' o Menú Principal.",
+                        code: `opcio = ""\nwhile opcio != "sortir":\n    print("1. Jugar | 2. Sortir")\n    opcio = input("Tria: ")\n    if opcio == "1":\n        print("Comença la partida!")\n    elif opcio == "2":\n        opcio = "sortir"`,
+                        explanation: "Necessites inicialitzar la variable de control abans del bucle.",
+                        runnable: true
+                    },
+                    {
+                        title: "7. Errors Comuns (Glitch)",
+                        type: "code",
+                        content: "El joc es penja (Bucle Infinit) si la condició mai es torna Falsa.",
+                        code: `vides = 3\nwhile vides > 0:\n    print("Sóc immortal!")\n    # Faltaria: vides -= 1\n# Aquest codi bloquejaria el navegador!`,
+                        explanation: "Assegura't sempre que la condició pugui canviar dins del bucle.",
+                        runnable: false
+                    },
+                    {
+                        title: "Tàctica: FOR vs WHILE",
+                        type: "table",
+                        content: "Quan utilitzar cada eina.",
+                        tableRows: [
+                            ["FOR", "Iteracions conegudes", "Recórrer llistes, rangs fixos", "Inventari, Puntuacions"],
+                            ["WHILE", "Incerta / Condicional", "Esperar input, esdeveniments", "Menú principal, Game Loop"]
+                        ]
+                    },
+                    {
+                        title: "Personalitzar HUD (Print)",
+                        type: "code",
+                        content: "Configurar com es mostren les dades amb `sep` i `end`.",
+                        code: `# sep: Separador entre elements\nprint("1", "2", "3", sep="-")\n# Sortida: 1-2-3\n\n# end: Què posar al final (per defecte és salt de línia)\nprint("Carregant", end="...")\nprint("Fet!")\n# Sortida: Carregant...Fet!`,
+                        explanation: "Útil per fer barres de càrrega o formatajar llistes d'ítems.",
+                        runnable: true
+                    }
+                ]
+            },
+            'data': {
+                title: "Estructures de Dades",
+                subtitle: "La Motxilla Avançada",
+                desc: "Organitza el teu botí. Domina les Llistes (Inventaris), Tuples (Coordenades) i Diccionaris (Fitxes).",
+                aea: "AEA5 i AEA8 (14h)",
+                cards: [
+                    {
+                        title: "1. La Motxilla (Llistes)",
+                        type: "code",
+                        content: "Una col·lecció ordenada d'objectes. Pots canviar el que hi ha dins.",
+                        code: `inventari = ["Espasa", "Poció", "Mapa"]\n\n# Veure el primer objecte (índex 0)\nprint(inventari[0]) # Espasa\n\n# Veure l'últim\nprint(inventari[-1]) # Mapa`,
+                        explanation: "Els índexs comencen a 0. Els negatius compten des del final.",
+                        runnable: true
+                    },
+                    {
+                        title: "2. Gestió d'Inventari (Mètodes)",
+                        type: "code",
+                        content: "Afegir (Loot) i treure (Drop) objectes.",
+                        code: `loot = ["Or"]\n\n# Loot (Afegir al final)\nloot.append("Escut")\n\n# Drop (Treure per nom)\nloot.remove("Or")\n\n# Insertar en posició específica\nloot.insert(0, "Poció")\nprint(loot)`,
+                        explanation: ".append() és el mètode més utilitzat per acumular dades.",
+                        runnable: true
+                    },
+                    {
+                        title: "3. Slot Ràpid (Slicing)",
+                        type: "code",
+                        content: "Agafar només una part de la llista (sub-llista).",
+                        code: `cofre = ["A", "B", "C", "D", "E"]\n\n# Del principi fins al 3 (exclòs)\nprimers = cofre[:3] # A, B, C\n\n# Del 2 fins al final\nresta = cofre[2:] # C, D, E`,
+                        explanation: "Sintaxi: [inici : fi]. El final no s'inclou!",
+                        runnable: true
+                    },
+                    {
+                        title: "4. Coordenades (Tuples)",
+                        type: "code",
+                        content: "Llistes IMMUTABLES. No es poden canviar un cop creades.",
+                        code: `spawn_point = (100, 200)\nprint(f"X: {spawn_point[0]}")\n\n# spawn_point[0] = 50 -> ERROR!\n# No pots moure el punt d'aparició!`,
+                        explanation: "S'usen parèntesis () en lloc de corxets []. Útils per a dades fixes com configuracions.",
+                        runnable: true
+                    },
+                    {
+                        title: "5. Fitxa de Personatge (Diccionaris)",
+                        type: "code",
+                        content: "Dades etiquetades (Clau: Valor). No tenen ordre, tenen noms.",
+                        code: `heroi = {\n  "nom": "Link",\n  "vida": 100,\n  "mana": 50\n}\n\nprint(f"L'heroi {heroi['nom']} té {heroi['vida']} HP.")`,
+                        explanation: "Usa claus {} per definir i corxets [] amb el nom de la clau per accedir.",
+                        runnable: true
+                    },
+                    {
+                        title: "6. Actualitzar Stats (Dicts)",
+                        type: "code",
+                        content: "Modificar valors o afegir noves característiques.",
+                        code: `stats = {"atk": 10, "def": 5}\n\n# Pujar de nivell (Modificar)\nstats["atk"] = 15\n\n# Aprendre màgia (Afegir nou)\nstats["magia"] = 20\n\nprint(stats)`,
+                        explanation: "Si la clau existeix, l'actualitza. Si no, la crea.",
+                        runnable: true
+                    }
+                ]
+            },
+            'functions': {
+                title: "Funcions",
+                subtitle: "Encanteris Personalitzats",
+                desc: "Blocs de codi reutilitzables. Els escrius una vegada, els invoques moltes vegades.",
+                aea: "AEA2 i AEA7 (12h)",
+                cards: [
+                    {
+                        title: "1. Crear Habilitat (Def)",
+                        type: "code",
+                        content: "Definir un encanteri nou per usar-lo després.",
+                        code: `def invocar_arma():\n    print("Has equipat l'Espasa Mestra!")\n\n# Llançar l'encanteri (Crida)\ninvocar_arma()`,
+                        explanation: "El codi dins de 'def' no s'executa fins que no crides la funció pel seu nom.",
+                        runnable: true
+                    },
+                    {
+                        title: "2. Objectius (Paràmetres)",
+                        type: "code",
+                        content: "Les dades que necessita l'habilitat per funcionar.",
+                        code: `def atacar(enemic, dany):\n    print(f"Atacant {enemic} amb {dany} punts!")\n\n# Per posició (Ordre importa)\natacar("Goblin", 10)\n\n# Per nom (Ordre no importa)\natacar(dany=50, enemic="Drac")`,
+                        explanation: "Els paràmetres són variables locals que només existeixen dins de la funció.",
+                        runnable: true
+                    },
+                    {
+                        title: "3. Xat vs Inventari (Return)",
+                        type: "code",
+                        content: "Diferència clau entre Print i Return.",
+                        code: `# Print: Només escriu al xat (no es pot guardar)\ndef mostrar_or(quantitat):\n    print(f"Tens {quantitat} or")\n\n# Return: Et dona l'objecte (es pot guardar)\ndef calcular_dany(base, bonus):\n    return base + bonus\n\ndany_total = calcular_dany(10, 5)\nprint(f"Fas {dany_total} de mal!")`,
+                        explanation: "Si vols fer càlculs amb el resultat, has d'utilitzar 'return'.",
+                        runnable: true
+                    },
+                    {
+                        title: "4. Equipament Base (Defaults)",
+                        type: "code",
+                        content: "Valors opcionals si no s'especifica res.",
+                        code: `def equipar(arma="Punys"):\n    print(f"Lluites amb: {arma}")\n\n# Sense argument (usa el defecte)\nequipar()\n# Amb argument (sobreescriu)\nequipar("Arc")`,
+                        explanation: "Els paràmetres opcionals sempre van al final de la definició.",
+                        runnable: true
+                    },
+                    {
+                        title: "5. Exemple: Mercader NPC",
+                        type: "code",
+                        content: "Funció completa amb càlculs i lògica.",
+                        code: `def comprar_pocio(preu, descompte=0):\n    final = preu - (preu * descompte / 100)\n    return final\n\n# Preu normal\nprint(f"Preu base: {comprar_pocio(100)} or")\n\n# Amb habilitat de Regateig (20%)\nprint(f"Amb regateig: {comprar_pocio(100, 20)} or")`,
+                        explanation: "Una funció útil per calcular preus dinàmics a la teva botiga.",
+                        runnable: true
+                    }
+                ]
+            },
+            'bugs': {
+                title: "Zona d'Errors",
+                subtitle: "El Bestiari de Bugs",
+                desc: "Si veus lletres vermelles, no entris en pànic. Consulta aquesta taula.",
+                aea: "Transversal",
+                cards: [
+                    {
+                        title: "Errors Comuns",
+                        type: "table",
+                        content: "Traducció Humana d'errors de Python.",
+                        tableRows: [
+                            ["SyntaxError", "No entenc el que has escrit", "Falten parèntesis, cometes o dos punts."],
+                            ["IndentationError", "Codi desordenat", "Revisa els espais/tabuladors a l'esquerra."],
+                            ["NameError", "Qui és aquest?", "Variable no creada o mal escrita."],
+                            ["TypeError", "Mescla impossible", "Intentes sumar text + número."],
+                            ["IndexError", "Fora del Mapa", "Busques una posició de llista que no existeix."],
+                            ["KeyError", "Item no trobat", "La clau del diccionari no existeix."],
+                            ["ValueError", "Munició Incorrecta", "Tipus correcte però valor invàlid (Ex: int('hola'))."],
+                            ["ZeroDivisionError", "Paradoxa Temporal", "Has intentat dividir per zero."],
+                            ["AttributeError", "Habilitat bloquejada", "L'objecte no té aquesta funció/mètode."]
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // --- UI LOGIC ---
+
+        function switchTab(tabId) {
+            // Update Navigation UI
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-gray-800', 'text-white', 'border-r-4', 'border-green-500');
+                btn.classList.add('text-gray-300');
+                if(btn.getAttribute('onclick').includes(tabId)) {
+                    btn.classList.add('bg-gray-800', 'text-white', 'border-r-4', 'border-green-500');
+                    btn.classList.remove('text-gray-300');
+                }
+            });
+
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+
+            // Show generic View or specific
+            if (codexData[tabId]) {
+                // Ensure Codex View is visible first, though usually redundant with JS execution order
+                document.getElementById('codex-view').classList.remove('hidden');
+                renderCodex(tabId);
+            } else {
+                document.getElementById(tabId).classList.remove('hidden');
+            }
+
+            // Close mobile menu if open
+            if(window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        }
+
+        function renderCodex(key) {
+            const data = codexData[key];
+            document.getElementById('cat-title').textContent = data.title;
+            
+            // Fixed: Changed from nextElementSibling to explicit ID
+            const subtitleEl = document.getElementById('cat-subtitle');
+            if(subtitleEl) {
+                subtitleEl.textContent = data.subtitle;
+            }
+
+            document.getElementById('cat-desc').textContent = data.desc;
+            document.getElementById('cat-aea').textContent = `Relacionat amb: ${data.aea}`;
+            
+            // Icon update map
+            const iconMap = { 'io_vars': '🎒', 'strings': '📜', 'control': '🛤️', 'loops': '🔄', 'data': '📚', 'functions': '✨', 'bugs': '☣️' };
+            document.getElementById('cat-icon').textContent = iconMap[key] || '📄';
+
+            const grid = document.getElementById('concepts-grid');
+            grid.innerHTML = '';
+
+            data.cards.forEach((card, index) => {
+                let cardHtml = `
+                    <div class="bg-[#1e1e1e] rounded-lg border border-gray-700 hover:border-green-500 transition-colors duration-300 overflow-hidden shadow-lg flex flex-col">
+                        <div class="p-4 border-b border-gray-800 bg-gray-900 flex justify-between items-center">
+                            <h3 class="text-green-400 font-bold code-font">${card.title}</h3>
+                            <span class="text-xs text-gray-600 uppercase">${card.type}</span>
+                        </div>
+                        <div class="p-4 flex-1">
+                            <p class="text-sm text-gray-300 mb-4">${card.content}</p>
+                `;
+
+                if (card.type === 'code') {
+                    // --- SYNTAX HIGHLIGHTING FIX ---
+                    // Using a Tokenizer strategy to avoid nested replacement issues
+                    // 1. Identify Strings and Comments first and hide them with placeholders
+                    let code = card.code;
+                    const placeholders = [];
+                    const save = (regex, type) => {
+                        code = code.replace(regex, (match) => {
+                            placeholders.push({ type, content: match });
+                            return `__PH_${placeholders.length - 1}__`;
+                        });
+                    };
+
+                    save(/(".*?")/g, 'string');
+                    save(/#.*/g, 'comment');
+
+                    // 2. Highlight Keywords in the remaining code (safe now)
+                    code = code
+                        .replace(/\b(print|input|len|range|append|int|str|float|remove|insert)\b/g, '<span class="token-func">$1</span>')
+                        .replace(/\b(if|else|elif|for|while|in|def|return)\b/g, '<span class="token-keyword">$1</span>');
+
+                    // 3. Restore Strings and Comments wrapped in their spans
+                    placeholders.forEach((ph, i) => {
+                        const classMap = { string: 'token-string', comment: 'token-comment' };
+                        const html = `<span class="${classMap[ph.type]}">${ph.content}</span>`;
+                        code = code.replace(`__PH_${i}__`, html);
+                    });
+
+                    cardHtml += `
+                        <div class="bg-[#121212] p-3 rounded border border-gray-800 relative group">
+                            <pre class="code-font text-sm text-gray-300 overflow-x-auto"><code>${code}</code></pre>
+                            ${card.runnable ? `<button onclick="runSimulation(${index}, '${key}')" class="absolute top-2 right-2 bg-green-600 hover:bg-green-500 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">▶ RUN</button>` : ''}
+                        </div>
+                        <div id="console-${key}-${index}" class="hidden mt-2 rounded"></div>
+                        <p class="mt-3 text-xs text-gray-500 italic border-l-2 border-purple-500 pl-2">${card.explanation}</p>
+                    `;
+                } else if (card.type === 'table') {
+                    cardHtml += `
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left text-gray-400">
+                                <thead class="text-xs text-gray-500 uppercase bg-gray-800">
+                                    <tr>
+                                        <th class="px-3 py-2">Nom</th>
+                                        <th class="px-3 py-2">Traducció</th>
+                                        <th class="px-3 py-2">Exemples/Nota</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${card.tableRows.map(row => `
+                                        <tr class="border-b border-gray-800">
+                                            <td class="px-3 py-2 font-bold text-purple-400">${row[0]}</td>
+                                            <td class="px-3 py-2 text-white">${row[1]}</td>
+                                            <td class="px-3 py-2 text-gray-400 code-font text-xs">${row[2]}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                } else if (card.type === 'list') {
+                     cardHtml += `
+                        <ul class="list-disc list-inside text-sm text-gray-300 space-y-1 ml-2">
+                            ${card.items.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    `;
+                }
+
+                cardHtml += `</div></div>`;
+                grid.innerHTML += cardHtml;
+            });
+        }
+
+        function runSimulation(index, key) {
+            const outputId = `console-${key}-${index}`;
+            const consoleDiv = document.getElementById(outputId);
+            
+            // Fake execution logic based on card content (Hardcoded strictly for visual demo)
+            let outputText = "> Executant script...\n";
+            const cardData = codexData[key].cards[index];
+            
+            if(cardData.code.includes('print("Game Over")')) outputText += "Game Over\nTens 5 monedes";
+            else if(cardData.code.includes('input')) outputText += "Nom? [Simulat: Jugador]\nHola Jugador";
+            else if(cardData.code.includes('if energia > 80') && !cardData.code.includes('else')) outputText += "Atac Final!";
+            else if(cardData.code.includes('if energia > 80') && cardData.code.includes('else') && !cardData.code.includes('elif')) outputText += "Atac Bàsic"; // Case if/else with 10 energy
+            else if(cardData.code.includes('elif energia > 20')) outputText += "Atac Bàsic"; // Case if/elif/else with 50 energy
+            else if(cardData.code.includes('while')) outputText += "Et queden 3 vides\nEt queden 2 vides\nEt queden 1 vides\nHas mort.";
+            
+            // Replaced generic checks with explicit content checks for new Data Structure cards
+            else if(cardData.code.includes('inventari[0]')) outputText += "Espasa\nMapa";
+            else if(cardData.code.includes('loot.insert')) outputText += "['Poció', 'Or', 'Escut']"; // After insert/remove logic
+            else if(cardData.code.includes('cofre[:3]')) outputText += "Primers: ['A', 'B', 'C']\nResta: ['C', 'D', 'E']"; // Not explicitly printed in card code but simulated
+            else if(cardData.code.includes('spawn_point')) outputText += "X: 100";
+            else if(cardData.code.includes('heroi[')) outputText += "L'heroi Link té 100 HP.";
+            else if(cardData.code.includes('stats["magia"]')) outputText += "{'atk': 15, 'def': 5, 'magia': 20}";
+
+            else if(cardData.code.includes('motxilla')) outputText += "Espasa";
+            else if(cardData.code.includes('jugador')) outputText += "Link";
+            else if(cardData.code.includes('curar')) outputText += "Vida actual: 70";
+            // New Handlers
+            else if(cardData.code.includes('Hola, món!')) outputText += "Hola, món!";
+            else if(cardData.code.includes('nom = "Anna"')) outputText += "Et dius Anna i tens 16 anys.\nTens 16 anys.\nEt dius Anna i tens 16 anys.";
+            else if(cardData.code.includes('input("Com et dius? ")')) outputText += "Encantat, Jugador!";
+            else if(cardData.code.includes('input("Quants anys tens? ")')) outputText += "L'any vinent tindràs 17\nFas 1.75 metres.";
+            else if(cardData.code.includes('input("Nom: ")')) outputText += "Nom: Marc\nEdat: 18\nAlçada (m): 1.75\nEt dius Marc, tens 18 anys i fas 1.75m.";
+            
+            // Strings Specific Handlers (NEW)
+            else if(cardData.code.includes('vas néixer el')) outputText += "Hola Dani, vas néixer el 1987";
+            else if(cardData.code.includes('**********')) outputText += "**********\nAAA\nLlargada: 9";
+            else if(cardData.code.includes('Kimetsu')) outputText += "Primera: K\nTercera: m\nÚltima: u";
+            else if(cardData.code.includes('Lord of the Rings')) outputText += "The \nLord\nthe Rings";
+            else if(cardData.code.includes('ATAC AERI')) outputText += "ATAC AERI\natac aeri\nAtac Aeri\n  Xtxc Aeri  ";
+            else if(cardData.code.includes('isdigit')) outputText += "Password numèric OK\nTió trobat a la posició: 5";
+
+            // Loop Specific Handlers
+            else if(cardData.code.includes('paraula = "QUEST"')) outputText += "Desxifrant: Q\nDesxifrant: U\nDesxifrant: E\nDesxifrant: S\nDesxifrant: T";
+            else if(cardData.code.includes('range(1, 4)')) outputText += "Entrant al Nivell 1\nEntrant al Nivell 2\nEntrant al Nivell 3\nDisparar!\nDisparar!\nDisparar!";
+            else if(cardData.code.includes('range(10, 0, -2)')) outputText += "Compte enrere: 10\nCompte enrere: 8\nCompte enrere: 6\nCompte enrere: 4\nCompte enrere: 2\nENLAIRAMENT!";
+            else if(cardData.code.includes('total_xp += xp')) outputText += "Guanyats 1 XP. Total: 1\nGuanyats 2 XP. Total: 3\nGuanyats 3 XP. Total: 6\nGuanyats 4 XP. Total: 10\nGuanyats 5 XP. Total: 15";
+            else if(cardData.code.includes('monedes < 3')) outputText += "Tens 0 monedes. Farmant...\nTens 1 monedes. Farmant...\nTens 2 monedes. Farmant...\nJa tens prou diners!";
+            else if(cardData.code.includes('opcio != "sortir"')) outputText += "1. Jugar | 2. Sortir\nTria: [Simulat: 1]\nComença la partida!\n1. Jugar | 2. Sortir\nTria: [Simulat: 2]";
+            else if(cardData.code.includes('sep="-')) outputText += "1-2-3\nCarregant...Fet!";
+
+            // Function Specific Handlers (NEW)
+            else if(cardData.code.includes('invocar_arma()')) outputText += "Has equipat l'Espasa Mestra!";
+            else if(cardData.code.includes('atacar("Goblin", 10)')) outputText += "Atacant Goblin amb 10 punts!\nAtacant Drac amb 50 punts!";
+            else if(cardData.code.includes('mostrar_or')) outputText += "Fas 15 de mal!";
+            else if(cardData.code.includes('equipar("Arc")')) outputText += "Lluites amb: Punys\nLluites amb: Arc";
+            else if(cardData.code.includes('comprar_pocio')) outputText += "Preu base: 100.0 or\nAmb regateig: 80.0 or";
+
+            consoleDiv.innerHTML = `<div class="console-output text-xs"><span class="text-green-500">root@python:~$</span> python3 script.py<br>${outputText.replace(/\n/g, '<br>')}</div>`;
+            consoleDiv.classList.remove('hidden');
+        }
+
+        // --- CALCULATOR LOGIC ---
+        function setupCalculator() {
+            const inputs = document.querySelectorAll('#calculator input');
+            inputs.forEach(input => {
+                input.addEventListener('input', calculateGrades);
+            });
+        }
+
+        function calculateGrades() {
+            const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
+            
+            // RA1 Calculation: QRA1=10*Pt1+10*Pt2+10*Pt3+10*Pt4+60*P1 (Note: Input 0-10, Formula implies weights 0.1, 0.1, 0.1, 0.1, 0.6)
+            // Wait, PDF says: 10*Pt1... if Pt1 is 0-10, 10*10 = 100. So the result is 0-100 scale? Or maybe weights are percentages?
+            // "10% Pt1". So if Pt1 is 8, contribution is 0.8. 
+            // Formula in PDF: 10*Pt1 + ... This suggests Pt is 0-1 scale OR result is 0-100. 
+            // Let's assume Inputs are 0-10 and we want result 0-10.
+            // Then formula is: (Pt1*0.1) + (Pt2*0.1) + (Pt3*0.1) + (Pt4*0.1) + (P1*0.6)
+            
+            const ra1 = (getVal('pt1')*0.1) + (getVal('pt2')*0.1) + (getVal('pt3')*0.1) + (getVal('pt4')*0.1) + (getVal('p1')*0.6);
+            document.getElementById('ra1-result').textContent = ra1.toFixed(2);
+            document.getElementById('ra1-result').className = `text-2xl font-bold pixel-font ${ra1 >= 5 ? 'text-green-500' : 'text-red-500'}`;
+
+            // RA2 Calculation: QRA2=10*Pt5+10*Pt6+10*Pt7+10*Pt8+20*P2+40*Pr1
+            const ra2 = (getVal('pt5')*0.1) + (getVal('pt6')*0.1) + (getVal('pt7')*0.1) + (getVal('pt8')*0.1) + (getVal('p2')*0.2) + (getVal('pr1')*0.4);
+            document.getElementById('ra2-result').textContent = ra2.toFixed(2);
+            document.getElementById('ra2-result').className = `text-2xl font-bold pixel-font ${ra2 >= 5 ? 'text-green-500' : 'text-red-500'}`;
+
+            // Total MP: Weighted average of hours?
+            // RA1: 24h, RA2: 42h. Total 66h.
+            // Weight RA1 = 24/66 ≈ 0.36
+            // Weight RA2 = 42/66 ≈ 0.64
+            const total = (ra1 * (24/66)) + (ra2 * (42/66));
+            
+            const display = document.getElementById('final-grade-display');
+            display.textContent = total.toFixed(2);
+            display.className = `text-5xl font-bold pixel-font ${total >= 5 ? 'text-green-500' : 'text-red-500'}`;
+            
+            document.getElementById('status-message').textContent = total >= 5 ? "Missió Complerta! Has aprovat el mòdul." : "Game Over. Necessites recuperar.";
+
+            updateGradeChart(ra1, ra2, total);
+        }
+
+        let gradeChart;
+        function updateGradeChart(ra1, ra2, total) {
+            if (gradeChart) gradeChart.destroy();
+            const ctx = document.getElementById('gradeChart').getContext('2d');
+            gradeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['RA1 (24h)', 'RA2 (42h)', 'NOTA FINAL'],
+                    datasets: [{
+                        label: 'Qualificació',
+                        data: [ra1, ra2, total],
+                        backgroundColor: [
+                            ra1 >= 5 ? '#00E676' : '#CF6679',
+                            ra2 >= 5 ? '#00E676' : '#CF6679',
+                            total >= 5 ? '#BB86FC' : '#CF6679'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 10, grid: { color: '#333' }, ticks: { color: '#999' } },
+                        x: { grid: { display: false }, ticks: { color: '#ccc' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+
+        // --- INIT ---
+        window.onload = function() {
+            // Hours Chart
+            const ctxHours = document.getElementById('hoursChart').getContext('2d');
+            new Chart(ctxHours, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Teoria/Intro (4h)', 'Gamificació (14h)', 'Bucles/Lògica (18h)', 'Strings/Funcions (12h)', 'Estructures (8h)', 'Projecte (10h)'],
+                    datasets: [{
+                        data: [4, 14, 18, 12, 8, 10],
+                        backgroundColor: ['#374151', '#00E676', '#BB86FC', '#3B82F6', '#F59E0B', '#EF4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#ccc', font: { size: 10 } } }
+                    }
+                }
+            });
+
+            setupCalculator();
+            
+            // Mobile Menu
+            document.getElementById('menuBtn').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.toggle('active');
+            });
+
+            // Set default view
+            switchTab('dashboard');
+        };
+
+    </script>
+    
+    <!-- Chosen Palette: Dark Mode with Neon Green (#00E676) and Cyber Purple (#BB86FC) accents. -->
+    <!-- Application Structure Plan:
+         1. Layout: Sidebar + Main Content (Dashboard/SPA pattern). Reasons: Allows quick switching between reference categories (variables, loops, etc.) which is critical for a "Cheat Sheet" use case.
+         2. Content:
+            - Dashboard: Overview of the module (SMX Option 1 PDF data) to give context on hours/evaluation.
+            - Codex Sections: Direct implementation of the 'guia_referencia_python.md' content, categorized for easy access. Interactive code snippets added to make it engaging ("Gamified").
+            - Calculator: Tool to ease the anxiety of "How do I pass?" based on the complex formulas in the PDF.
+         3. Interactions:
+            - Click-to-Run simulation for code examples.
+            - Real-time grade calculation.
+            - Tabbed navigation for zero-latency browsing.
+    -->
+    <!-- Visualization & Content Choices:
+         - Chart.js Doughnut: Used for syllabus hours breakdown. Goal: Show effort distribution. Justification: Easy to read "how much time we spend on X".
+         - Chart.js Bar: Used for Grade Visualization. Goal: Show pass/fail status clearly.
+         - Syntax Highlighting (HTML/CSS): Used instead of SVG/Images for code. Goal: Accessibility and clean scaling.
+         - Interactive 'Console': Simulates Python output without needing a backend, reinforcing the "learning by doing" concept.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</body>
+</html>
