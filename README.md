@@ -1,6 +1,6 @@
 # Python Quest: El Còdex
 
-[![Versió](https://img.shields.io/badge/versió-3.0.0-blue.svg)](https://github.com/dmorenoar/python-codex-smx)
+[![Versió](https://img.shields.io/badge/versió-3.3.0-blue.svg)](https://github.com/dmorenoar/python-codex-smx)
 [![Estat](https://img.shields.io/badge/estat-ONLINE-brightgreen.svg)](https://dmorenoar.github.io/python-codex-smx/)
 
 **Plataforma interactiva d'aprenentatge de Python** dissenyada per al mòdul "Introducció a la Programació" en el cicle formatiu SMX (Sistemes Microinformàtics i Xarxes).
