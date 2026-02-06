@@ -122,7 +122,7 @@
         <aside id="sidebar" class="sidebar w-64 bg-[#1e1e1e] flex flex-col border-r border-gray-800 transition-all duration-300">
             <div class="p-6 border-b border-gray-800 hidden md:block">
                 <h1 class="text-xl text-green-400 mb-1 pixel-font leading-relaxed">PYTHON<br>QUEST</h1>
-                <p class="text-xs text-gray-500 code-font">v2.3.0 [MENU-SORT]</p>
+                <p class="text-xs text-gray-500 code-font">v2.9.1 [FIX-QUOTES]</p>
             </div>
 
             <nav class="flex-1 overflow-y-auto p-4 space-y-2">
@@ -132,18 +132,17 @@
                 
                 <div class="pt-4 pb-2 text-xs font-bold text-gray-500 uppercase tracking-wider px-4">El Còdex (Apunts)</div>
                 
-                <button onclick="switchTab('io_vars')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                <button onclick="switchTab('io_vars')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3 active-nav">
                     <span>🎒</span> I/O i Variables
+                </button>
+                <button onclick="switchTab('strings')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                    <span>📜</span> Cadenes (Strings)
                 </button>
                 <button onclick="switchTab('control')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
                     <span>🛤️</span> Control de Flux
                 </button>
                 <button onclick="switchTab('loops')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
                     <span>🔄</span> Bucles (Repetició)
-                </button>
-                <!-- Moved Strings here -->
-                <button onclick="switchTab('strings')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3 active-nav">
-                    <span>📜</span> Cadenes (Strings)
                 </button>
                 <button onclick="switchTab('functions')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
                     <span>✨</span> Funcions
@@ -153,6 +152,9 @@
                 </button>
                 <button onclick="switchTab('bugs')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
                     <span>☣️</span> Zona d'Errors
+                </button>
+                <button onclick="switchTab('infographics')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
+                    <span>🗺️</span> Mapes Visuals
                 </button>
 
                 <div class="pt-4 pb-2 text-xs font-bold text-gray-500 uppercase tracking-wider px-4">Utilitats</div>
@@ -347,9 +349,9 @@
                     {
                         title: "1. Sortida Bàsica (Print)",
                         type: "command",
-                        content: "El Crit. Mostra un missatge a la pantalla.",
-                        code: `print("Hola, món!")`,
-                        explanation: "Simplement mostra text. Recorda les cometes!",
+                        content: "El Crit. És la funció principal per comunicar-se amb el jugador. Mostra missatges, resultats o estat del joc a la pantalla.",
+                        code: `print("Hola, món!")\nprint(100 + 50) # També calcula!\nprint("Vides:", 3)`,
+                        explanation: "Pots imprimir text (entre cometes), números directament o el resultat d'operacions matemàtiques.",
                         runnable: true
                     },
                     {
@@ -374,9 +376,9 @@
                     {
                         title: "4. Entrada de Text (input)",
                         type: "command",
-                        content: "Llegir paraules o frases del jugador.",
-                        code: `nom = input("Com et dius? ")\nprint(f"Encantat, {nom}!")`,
-                        explanation: "Tot el que llegeix input() es guarda com a text (String).",
+                        content: "L'Oïda. Atura l'execució del programa i espera que el jugador escrigui alguna cosa i premi 'Enter'.",
+                        code: `nom = input("Escriu el teu nom: ")\nprint(f"Benvingut, {nom}!")\n\n# ATENCIÓ: Sempre és text\nedat = input("Edat? ") # Si escrius 15, guarda "15"`,
+                        explanation: "Tot el que llegeix input() es guarda com a text (String). El missatge dins dels parèntesis és la pregunta que veu l'usuari (prompt).",
                         runnable: true
                     },
                     {
@@ -684,24 +686,110 @@
             'bugs': {
                 title: "Zona d'Errors",
                 subtitle: "El Bestiari de Bugs",
-                desc: "Si veus lletres vermelles, no entris en pànic. Consulta aquesta taula.",
+                desc: "Si veus lletres vermelles, no entris en pànic. Consulta aquesta taula per identificar el monstre.",
                 aea: "Transversal",
                 cards: [
                     {
-                        title: "Errors Comuns",
+                        title: "Errors de Sintaxi i Lògica",
                         type: "table",
-                        content: "Traducció Humana d'errors de Python.",
+                        content: "Els clàssics que et trobaràs al principi.",
                         tableRows: [
                             ["SyntaxError", "No entenc el que has escrit", "Falten parèntesis, cometes o dos punts."],
                             ["IndentationError", "Codi desordenat", "Revisa els espais/tabuladors a l'esquerra."],
                             ["NameError", "Qui és aquest?", "Variable no creada o mal escrita."],
-                            ["TypeError", "Mescla impossible", "Intentes sumar text + número."],
-                            ["IndexError", "Fora del Mapa", "Busques una posició de llista que no existeix."],
-                            ["KeyError", "Item no trobat", "La clau del diccionari no existeix."],
                             ["ValueError", "Munició Incorrecta", "Tipus correcte però valor invàlid (Ex: int('hola'))."],
-                            ["ZeroDivisionError", "Paradoxa Temporal", "Has intentat dividir per zero."],
-                            ["AttributeError", "Habilitat bloquejada", "L'objecte no té aquesta funció/mètode."]
+                            ["ZeroDivisionError", "Paradoxa Temporal", "Has intentat dividir per zero."]
                         ]
+                    },
+                    {
+                        title: "Errors d'Estructures de Dades",
+                        type: "table",
+                        content: "Bugs específics quan treballes amb Llistes, Tuples i Diccionaris.",
+                        tableRows: [
+                            ["IndexError", "Fora del Mapa", "Busques una posició de llista que no existeix (Ex: índex 10 en llista de 3)."],
+                            ["KeyError", "Item no trobat", "Busques una clau al diccionari que no existeix."],
+                            ["TypeError (Tupla)", "Objecte Protegit", "Intentes modificar una Tupla (són immutables!)."],
+                            ["AttributeError", "Habilitat bloquejada", "Intentes fer una acció que l'objecte no té (Ex: tupla.append())."],
+                            ["TypeError (Suma)", "Mescla impossible", "Intentes sumar una Llista amb un número o Text."]
+                        ]
+                    }
+                ]
+            },
+            'infographics': {
+                title: "Mapes Visuals",
+                subtitle: "Cartografia del Coneixement",
+                desc: "Recull d'infografies clau per no perdre's en el món de Python.",
+                aea: "Transversal",
+                cards: [
+                    {
+                        title: "1. La Motxilla de Dades",
+                        type: "image",
+                        content: "Aprèn a gestionar el teu inventari: Tipus de dades i variables.",
+                        src: "variables.jpg",
+                        alt: "Infografia Variables i Tipus de Dades"
+                    },
+                    {
+                        title: "2. Consola de Comandament",
+                        type: "image",
+                        content: "Domina la Consola de Comandament: Com parlar amb el sistema (Input/Output).",
+                        src: "I-O.jpg",
+                        alt: "Infografia Input Output"
+                    },
+                    {
+                        title: "3. Pergamí de Cadenes",
+                        type: "image",
+                        content: "El Pergamí de les Cadenes: Manipulació avançada de text i strings.",
+                        src: "string.jpg",
+                        alt: "Infografia Strings i Text"
+                    },
+                    {
+                        title: "4. Presa de Decisions",
+                        type: "image",
+                        content: "Presa de Decisions: Bifurcacions, camins i lògica del joc (if/else).",
+                        src: "est-control.jpg",
+                        alt: "Infografia Condicionals"
+                    },
+                    {
+                        title: "5. Automatitzar Missions",
+                        type: "image",
+                        content: "Automatitzar Missions: Bucles For i While per tasques repetitives.",
+                        src: "loops.jpg",
+                        alt: "Infografia Bucles"
+                    },
+                    {
+                        title: "6. Els teus Encanteris",
+                        type: "image",
+                        content: "Els teus propis Encanteris: Creació de Funcions i Paràmetres.",
+                        src: "functions.jpg",
+                        alt: "Infografia Funcions"
+                    },
+                    {
+                        title: "7. La Motxilla (Llistes)",
+                        type: "image",
+                        content: "Dominant les Llistes en Python: Gestió d'inventari, loot i mètodes.",
+                        src: "llistes.jpg",
+                        alt: "Infografia Llistes"
+                    },
+                    {
+                        title: "8. Els Checkpoints (Tuples)",
+                        type: "image",
+                        content: "Dades immutables escrites en pedra. Coordenades i valors fixos.",
+                        src: "tupla.jpg",
+                        alt: "Infografia Tuples"
+                    },
+                    {
+                        title: "9. Fitxa de Personatge (Diccionaris)",
+                        type: "image",
+                        content: "Diccionaris en Python: Clau-Valor, atributs i accés ràpid.",
+                        src: "dict.jpg",
+                        alt: "Infografia Diccionaris"
+                    },
+                    {
+                        title: "10. Llibre d'Assoliments (Sets)",
+                        type: "image",
+                        content: "Col·leccions sense duplicats. Màgia avançada i elements únics.",
+                        src: "set.jpg",
+                        alt: "Infografia Sets"
                     }
                 ]
             }
@@ -752,7 +840,7 @@
             document.getElementById('cat-aea').textContent = `Relacionat amb: ${data.aea}`;
             
             // Icon update map
-            const iconMap = { 'io_vars': '🎒', 'strings': '📜', 'control': '🛤️', 'loops': '🔄', 'data': '📚', 'functions': '✨', 'bugs': '☣️' };
+            const iconMap = { 'io_vars': '🎒', 'strings': '📜', 'control': '🛤️', 'loops': '🔄', 'data': '📚', 'functions': '✨', 'bugs': '☣️', 'infographics': '🗺️' };
             document.getElementById('cat-icon').textContent = iconMap[key] || '📄';
 
             const grid = document.getElementById('concepts-grid');
@@ -834,6 +922,23 @@
                             ${card.items.map(item => `<li>${item}</li>`).join('')}
                         </ul>
                     `;
+                } else if (card.type === 'image') {
+                    // NEW IMAGE CARD RENDERER
+                    // Fix: Escape single quotes in title for the inline onerror handler
+                    const safeTitle = encodeURIComponent(card.title).replace(/'/g, "%27");
+                    cardHtml += `
+                        <div class="bg-[#121212] p-2 rounded border border-gray-800 group relative">
+                            <img src="${card.src}" 
+                                 alt="${card.alt || card.title}" 
+                                 class="w-full h-auto rounded hover:opacity-90 transition-opacity cursor-pointer border border-gray-700" 
+                                 onclick="window.open(this.src, '_blank')"
+                                 onerror="this.onerror=null; this.src='https://placehold.co/600x400/121212/00E676?text=${safeTitle}'; this.parentElement.querySelector('span').textContent='Imatge no disponible (Utilitza Placeholder)';"
+                            >
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
+                                <span class="bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">Clic per ampliar</span>
+                            </div>
+                        </div>
+                    `;
                 }
 
                 cardHtml += `</div></div>`;
@@ -870,7 +975,7 @@
             // New Handlers
             else if(cardData.code.includes('Hola, món!')) outputText += "Hola, món!";
             else if(cardData.code.includes('nom = "Anna"')) outputText += "Et dius Anna i tens 16 anys.\nTens 16 anys.\nEt dius Anna i tens 16 anys.";
-            else if(cardData.code.includes('input("Com et dius? ")')) outputText += "Encantat, Jugador!";
+            else if(cardData.code.includes('input("Escriu el teu nom: ")')) outputText += "Benvingut, Jugador!\nEdat? [Simulat: 15]";
             else if(cardData.code.includes('input("Quants anys tens? ")')) outputText += "L'any vinent tindràs 17\nFas 1.75 metres.";
             else if(cardData.code.includes('input("Nom: ")')) outputText += "Nom: Marc\nEdat: 18\nAlçada (m): 1.75\nEt dius Marc, tens 18 anys i fas 1.75m.";
             
