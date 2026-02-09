@@ -122,7 +122,7 @@
         <aside id="sidebar" class="sidebar w-64 bg-[#1e1e1e] flex flex-col border-r border-gray-800 transition-all duration-300">
             <div class="p-6 border-b border-gray-800 hidden md:block">
                 <h1 class="text-xl text-green-400 mb-1 pixel-font leading-relaxed">PYTHON<br>QUEST</h1>
-                <p class="text-xs text-gray-500 code-font">v3.3.0 [FULL-ITER]</p>
+                <p class="text-xs text-gray-500 code-font">v3.6.0 [VARS-UPDATE]</p>
             </div>
 
             <nav class="flex-1 overflow-y-auto p-4 space-y-2">
@@ -147,9 +147,28 @@
                 <button onclick="switchTab('functions')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
                     <span>✨</span> Funcions
                 </button>
-                <button onclick="switchTab('data')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
-                    <span>📚</span> Estructures Dades
-                </button>
+                
+                <!-- DATA STRUCTURES SUBMENU -->
+                <div>
+                    <button onclick="toggleSubmenu('submenu-data')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <span>📚</span> Estructures Dades
+                        </div>
+                        <svg class="w-3 h-3 transform transition-transform" id="arrow-submenu-data" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="submenu-data" class="hidden pl-4 space-y-1 mt-1 border-l-2 border-gray-700 ml-4">
+                        <button onclick="switchTab('data_lists')" class="nav-btn-sub w-full text-left px-4 py-2 rounded text-sm hover:bg-gray-800 text-gray-400 hover:text-white transition-colors">
+                            Llistes (Arrays)
+                        </button>
+                        <button onclick="switchTab('data_tuples')" class="nav-btn-sub w-full text-left px-4 py-2 rounded text-sm hover:bg-gray-800 text-gray-400 hover:text-white transition-colors">
+                            Tuples
+                        </button>
+                        <button onclick="switchTab('data_dicts')" class="nav-btn-sub w-full text-left px-4 py-2 rounded text-sm hover:bg-gray-800 text-gray-400 hover:text-white transition-colors">
+                            Diccionaris
+                        </button>
+                    </div>
+                </div>
+
                 <button onclick="switchTab('bugs')" class="nav-btn w-full text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center gap-3">
                     <span>☣️</span> Zona d'Errors
                 </button>
@@ -448,9 +467,9 @@
                     {
                         title: "6. Mètodes de Format",
                         type: "code",
-                        content: "Canviar l'estil del text.",
-                        code: `msg = "  Atac Aeri  "\n\nprint(msg.upper())        # MAJÚSCULES\nprint(msg.lower())        # minúscules\nprint(msg.strip())        # Esborra espais extres\nprint(msg.replace("A", "X")) # Canvia lletres`,
-                        explanation: "Els mètodes retornen una còpia nova, no modifiquen l'original.",
+                        content: "Canviar l'estil del text. Recorda: Són immutables, has de guardar el resultat.",
+                        code: `msg = "Atac Aeri"\n\n# Guardar en una nova variable\nmissatge_secret = msg.replace("A", "X")\nprint(missatge_secret) # XtXc Xeri\n\n# Sobreescriure\nmsg = msg.upper()\nprint(msg) # ATAC AERI`,
+                        explanation: "Els mètodes retornen una còpia nova, no modifiquen l'original. Si no ho guardes en una variable, el canvi es perd.",
                         runnable: true
                     },
                     {
@@ -587,11 +606,13 @@
                     }
                 ]
             },
-            'data': {
-                title: "Estructures de Dades",
-                subtitle: "La Motxilla Avançada",
-                desc: "Organitza el teu botí. Domina les Llistes (Inventaris), Tuples (Coordenades) i Diccionaris (Fitxes).",
-                aea: "AEA5 i AEA8 (14h)",
+            
+            // NEW CATEGORY: Data Lists
+            'data_lists': {
+                title: "Llistes (Arrays)",
+                subtitle: "Inventari i Col·leccions",
+                desc: "Col·leccions ordenades i modificables. La teva motxilla d'aventurer.",
+                aea: "AEA5 (8h)",
                 cards: [
                     {
                         title: "1. La Motxilla (Llistes)",
@@ -602,15 +623,15 @@
                         runnable: true
                     },
                     {
-                        title: "2. Gestió d'Inventari (Mètodes)",
+                        title: "2. Afegir i Treure (Mètodes)",
                         type: "code",
-                        content: "Afegir (Loot) i treure (Drop) objectes.",
+                        content: "Comandes per gestionar l'inventari.",
                         code: `loot = ["Or"]\n\n# Loot (Afegir al final)\nloot.append("Escut")\n\n# Drop (Treure per nom)\nloot.remove("Or")\n\n# Insertar en posició específica\nloot.insert(0, "Poció")\nprint(loot)`,
                         explanation: ".append() és el mètode més utilitzat per acumular dades.",
                         runnable: true
                     },
                     {
-                        title: "3. Recórrer l'Inventari (Llistes)",
+                        title: "3. Recórrer l'Inventari",
                         type: "code",
                         content: "Revisar tots els objectes un per un (Bucle).",
                         code: `inventari = ["Espasa", "Poció", "Mapa"]\n\n# Opció 1: Directe\nfor objecte in inventari:\n    print(f"- {objecte}")\n\n# Opció 2: Amb número (enumerate)\nfor i, objecte in enumerate(inventari):\n    print(f"Slot {i}: {objecte}")`,
@@ -626,7 +647,25 @@
                         runnable: true
                     },
                     {
-                        title: "5. Coordenades (Tuples)",
+                        title: "5. Millorar Equip (Modificar)",
+                        type: "code",
+                        content: "Canviar un objecte específic per un altre de millor.",
+                        code: `inventari = ["Espasa", "Poció", "Mapa"]\n\n# Canviar el primer objecte\ninventari[0] = "Espasa Llegendària"\nprint(inventari)\n# ['Espasa Llegendària', 'Poció', 'Mapa']`,
+                        explanation: "Pots canviar el contingut d'una posició usant el seu índex i el signe igual (=).",
+                        runnable: true
+                    }
+                ]
+            },
+            
+            // NEW CATEGORY: Data Tuples
+            'data_tuples': {
+                title: "Tuples (Immutables)",
+                subtitle: "Dades Fixes",
+                desc: "Llistes que no es poden modificar. Ideals per a coordenades i constants.",
+                aea: "AEA5 (2h)",
+                cards: [
+                    {
+                        title: "1. Coordenades (Tuples)",
                         type: "code",
                         content: "Llistes IMMUTABLES. No es poden canviar un cop creades.",
                         code: `spawn_point = (100, 200)\nprint(f"X: {spawn_point[0]}")\n\n# spawn_point[0] = 50 -> ERROR!\n# No pots moure el punt d'aparició!`,
@@ -634,7 +673,49 @@
                         runnable: true
                     },
                     {
-                        title: "6. Fitxa de Personatge (Diccionaris)",
+                        title: "2. Revisar l'Equipament (Recórrer)",
+                        type: "code",
+                        content: "Igual que les llistes, pots revisar els elements un per un.",
+                        code: `items_fixos = ("Espasa", "Escut")\nfor item in items_fixos:\n    print(item)`,
+                        explanation: "Es recorren exactament igual que una llista, amb un bucle 'for'.",
+                        runnable: true
+                    },
+                    {
+                        title: "3. Forjar de nou (Modificar)",
+                        type: "code",
+                        content: "TRUC: Per canviar una tupla, converteix-la en llista, canvia-la i torna a fer-la tupla.",
+                        code: `stats = (10, 5)\n# stats[0] = 15 -> Error!\n\ntemp = list(stats)\ntemp[0] = 15\nstats = tuple(temp)\nprint(stats)`,
+                        explanation: "No és eficient, però és l'única manera si la dada ha de ser una tupla.",
+                        runnable: true
+                    },
+                    {
+                        title: "4. Desempaquetar Botí (Unpacking)",
+                        type: "code",
+                        content: "Assignar valors de la tupla a variables separades ràpidament.",
+                        code: `cofre = ("Or", "Gemma")\n(boti1, boti2) = cofre\n\nprint(f"Has trobat {boti1} i {boti2}")`,
+                        explanation: "Molt útil per a coordenades: x, y = punt.",
+                        runnable: true
+                    },
+                    {
+                        title: "5. Destruir Objecte (Eliminar)",
+                        type: "code",
+                        content: "No pots esborrar un element, però pots destruir tota la tupla.",
+                        code: `t = (1, 2, 3)\n# del t[0] -> Error!\ndel t \n# Ara 't' ja no existeix`,
+                        explanation: "L'ordre 'del' elimina la variable completa de la memòria.",
+                        runnable: false
+                    }
+                ]
+            },
+
+            // NEW CATEGORY: Data Dicts
+            'data_dicts': {
+                title: "Diccionaris (Hash Maps)",
+                subtitle: "Clau i Valor",
+                desc: "Emmagatzema dades amb etiquetes (Claus). La fitxa del teu personatge.",
+                aea: "AEA8 (4h)",
+                cards: [
+                    {
+                        title: "1. Fitxa de Personatge",
                         type: "code",
                         content: "Dades etiquetades (Clau: Valor). No tenen ordre, tenen noms.",
                         code: `heroi = {\n  "nom": "Link",\n  "vida": 100,\n  "mana": 50\n}\n\nprint(f"L'heroi {heroi['nom']} té {heroi['vida']} HP.")`,
@@ -642,7 +723,7 @@
                         runnable: true
                     },
                     {
-                        title: "7. Llegir el Bestiari (Recórrer Diccionaris)",
+                        title: "2. Llegir el Bestiari",
                         type: "code",
                         content: "Extreure informació de claus i valors.",
                         code: `stats = {"ATK": 10, "DEF": 5, "SPD": 8}\n\n# Només claus\nfor stat in stats.keys():\n    print(stat)\n\n# Tot junt (.items())\nfor stat, valor in stats.items():\n    print(f"{stat}: {valor}")`,
@@ -650,23 +731,35 @@
                         runnable: true
                     },
                     {
-                        title: "8. Actualitzar Stats (Dicts)",
+                        title: "3. Modificar i Afegir Dades",
                         type: "code",
-                        content: "Modificar valors o afegir noves característiques.",
-                        code: `stats = {"atk": 10, "def": 5}\n\n# Pujar de nivell (Modificar)\nstats["atk"] = 15\n\n# Aprendre màgia (Afegir nou)\nstats["magia"] = 20\n\nprint(stats)`,
-                        explanation: "Si la clau existeix, l'actualitza. Si no, la crea.",
+                        content: "Actualitzar valors o crear noves entrades.",
+                        code: `stats = {"atk": 10, "def": 5}\n\n# 1. Modificar (La clau ja existeix)\nstats["atk"] = 50\nprint(f"Nou Atac: {stats['atk']}")\n\n# 2. Afegir (La clau NO existeix)\nstats["velocitat"] = 20\nprint(stats)`,
+                        explanation: "Si la clau existeix, canvia el valor. Si no existeix, crea una entrada nova automàticament.",
                         runnable: true
                     },
                     {
-                        title: "9. Revisar Assoliments (Sets)",
+                        title: "4. Revisar Assoliments (Sets)",
                         type: "code",
-                        content: "Recórrer conjunts (Recorda: No tenen ordre!).",
+                        content: "Col·leccions sense duplicats (Sets).",
                         code: `assoliments = {"Primera Sang", "Mestre d'Espasa"}\n\nfor trofeu in assoliments:\n    print(f"Desbloquejat: {trofeu}")\n\n# No pots fer assoliments[0], no tenen índex!`,
-                        explanation: "Els sets són com una bossa desordenada. Pots treure coses, però no saps en quin ordre sortiran.",
+                        explanation: "Els sets són com una bossa desordenada. Útils per eliminar duplicats.",
                         runnable: true
                     }
                 ]
             },
+
+            // Keeping 'data' for legacy compatibility or summary view if needed, but menu points to specific ones now
+            'data': {
+                title: "Estructures de Dades (Resum)",
+                subtitle: "Totes les col·leccions",
+                desc: "Visió general de Llistes, Tuples i Diccionaris.",
+                aea: "AEA5 i AEA8",
+                cards: [
+                    // ... existing mixed cards ...
+                ]
+            },
+            
             'functions': {
                 title: "Funcions",
                 subtitle: "Encanteris Personalitzats",
@@ -830,14 +923,47 @@
 
         // --- UI LOGIC ---
 
+        function toggleSubmenu(id) {
+            const submenu = document.getElementById(id);
+            const arrow = document.getElementById('arrow-' + id);
+            
+            submenu.classList.toggle('hidden');
+            
+            if (submenu.classList.contains('hidden')) {
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+
         function switchTab(tabId) {
             // Update Navigation UI
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-gray-800', 'text-white', 'border-r-4', 'border-green-500');
-                btn.classList.add('text-gray-300');
+                // Check if it's the submenu parent button
+                if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('toggleSubmenu')) {
+                     // Do nothing for parent toggle, maintain state manually if needed or leave as is
+                } else {
+                    btn.classList.remove('bg-gray-800', 'text-white', 'border-r-4', 'border-green-500');
+                    btn.classList.add('text-gray-300');
+                    if(btn.getAttribute('onclick').includes(tabId)) {
+                        btn.classList.add('bg-gray-800', 'text-white', 'border-r-4', 'border-green-500');
+                        btn.classList.remove('text-gray-300');
+                    }
+                }
+            });
+            
+            // Submenu items highlighting
+            document.querySelectorAll('.nav-btn-sub').forEach(btn => {
+                btn.classList.remove('text-white', 'font-bold');
+                btn.classList.add('text-gray-400');
                 if(btn.getAttribute('onclick').includes(tabId)) {
-                    btn.classList.add('bg-gray-800', 'text-white', 'border-r-4', 'border-green-500');
-                    btn.classList.remove('text-gray-300');
+                    btn.classList.add('text-white', 'font-bold');
+                    btn.classList.remove('text-gray-400');
+                    
+                    // Also highlight parent if sub-item is active
+                    const parentBtn = document.querySelector('button[onclick*="toggleSubmenu"]');
+                    parentBtn.classList.add('text-white');
+                    parentBtn.classList.remove('text-gray-300');
                 }
             });
 
@@ -873,7 +999,18 @@
             document.getElementById('cat-aea').textContent = `Relacionat amb: ${data.aea}`;
             
             // Icon update map
-            const iconMap = { 'io_vars': '🎒', 'strings': '📜', 'control': '🛤️', 'loops': '🔄', 'data': '📚', 'functions': '✨', 'bugs': '☣️', 'infographics': '🗺️' };
+            const iconMap = { 
+                'io_vars': '🎒', 
+                'strings': '📜', 
+                'control': '🛤️', 
+                'loops': '🔄', 
+                'functions': '✨', 
+                'bugs': '☣️', 
+                'infographics': '🗺️',
+                'data_lists': '📚',
+                'data_tuples': '🔒',
+                'data_dicts': '📖'
+            };
             document.getElementById('cat-icon').textContent = iconMap[key] || '📄';
 
             const grid = document.getElementById('concepts-grid');
@@ -908,7 +1045,7 @@
 
                     // 2. Highlight Keywords in the remaining code (safe now)
                     code = code
-                        .replace(/\b(print|input|len|range|append|int|str|float|remove|insert|enumerate|keys|values|items)\b/g, '<span class="token-func">$1</span>')
+                        .replace(/\b(print|input|len|range|append|int|str|float|remove|insert|enumerate|keys|values|items|list|tuple|del)\b/g, '<span class="token-func">$1</span>')
                         .replace(/\b(if|else|elif|for|while|in|def|return)\b/g, '<span class="token-keyword">$1</span>');
 
                     // 3. Restore Strings and Comments wrapped in their spans
@@ -1004,7 +1141,12 @@
             else if(cardData.code.includes('enumerate(inventari)')) outputText += "Slot 0: Espasa\nSlot 1: Poció\nSlot 2: Mapa";
             else if(cardData.code.includes('stats.items()')) outputText += "ATK: 10\nDEF: 5\nSPD: 8";
             else if(cardData.code.includes('assoliments = {')) outputText += "Desbloquejat: Primera Sang\nDesbloquejat: Mestre d'Espasa";
-
+            // New Tuple Handlers
+            else if(cardData.code.includes('items_fixos')) outputText += "Espasa\nEscut";
+            else if(cardData.code.includes('list(stats)')) outputText += "(15, 5)";
+            else if(cardData.code.includes('boti1')) outputText += "Has trobat Or i Gemma";
+            else if(cardData.code.includes('inventari[0] = "Espasa Llegendària"')) outputText += "['Espasa Llegendària', 'Poció', 'Mapa']";
+            else if(cardData.code.includes('stats["velocitat"]')) outputText += "Nou Atac: 50\n{'atk': 50, 'def': 5, 'velocitat': 20}";
 
             else if(cardData.code.includes('motxilla')) outputText += "Espasa";
             else if(cardData.code.includes('jugador')) outputText += "Link";
@@ -1018,11 +1160,10 @@
             
             // Strings Specific Handlers (NEW)
             else if(cardData.code.includes('vas néixer el')) outputText += "Hola Dani, vas néixer el 1987";
-            else if(cardData.code.includes('len(manga)')) outputText += "Longitud: 9\n0";
-            else if(cardData.code.includes('"*" * 10')) outputText += "**********\nHolaHolaHola";
+            else if(cardData.code.includes('"*" * 10')) outputText += "**********\nAAA\nLlargada: 9";
             else if(cardData.code.includes('Kimetsu')) outputText += "Primera: K\nTercera: m\nÚltima: u";
             else if(cardData.code.includes('Lord of the Rings')) outputText += "The \nLord\nthe Rings";
-            else if(cardData.code.includes('msg.upper()')) outputText += "ATAC AERI\natac aeri\nAtac Aeri\n  Xtxc Aeri  ";
+            else if(cardData.code.includes('missatge_secret')) outputText += "XtXc Xeri\nATAC AERI";
             else if(cardData.code.includes('isdigit')) outputText += "Password numèric OK\nTió trobat a la posició: 5";
 
             // Loop Specific Handlers
