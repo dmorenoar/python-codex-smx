@@ -326,9 +326,19 @@
                                     <label class="block text-xs text-purple-400 mb-1 font-bold">Prova P2 (20%)</label>
                                     <input type="number" id="p2" class="w-full bg-[#121212] border border-purple-500 rounded p-2 text-white focus:border-purple-300 outline-none" placeholder="0-10">
                                 </div>
-                                <div>
-                                    <label class="block text-xs text-yellow-400 mb-1 font-bold">Projecte Pr1 (40%)</label>
-                                    <input type="number" id="pr1" class="w-full bg-[#121212] border border-yellow-500 rounded p-2 text-white focus:border-yellow-300 outline-none" placeholder="0-10">
+                                <!-- SUB-BREAKDOWN FOR PROJECTE PR1 (40% of RA2) -->
+                                <div class="border border-dashed border-yellow-500 p-3 rounded bg-[#161616] space-y-3">
+                                    <span class="block text-xs text-yellow-400 font-bold">Projecte Pr1 (40% total del RA2)</span>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label class="block text-[10px] text-gray-400 mb-1 font-semibold">📝 Treball / Projecte (20%)</label>
+                                            <input type="number" id="pr1_treball" class="w-full bg-[#121212] border border-yellow-500 rounded p-2 text-white focus:border-yellow-300 outline-none text-xs" placeholder="0-10">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] text-gray-400 mb-1 font-semibold">🛡️ Validació / Defensa (80%)</label>
+                                            <input type="number" id="pr1_validacio" class="w-full bg-[#121212] border border-yellow-500 rounded p-2 text-white focus:border-yellow-300 outline-none text-xs" placeholder="0-10">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="text-right">
@@ -485,7 +495,7 @@
             'control': {
                 title: "Control de Flux",
                 subtitle: "La Bifurcació del Destí",
-                desc: "El codi llegeix de dalt a baix, però aquí decidim quin camí prendre usant lògica.",
+                desc: "El codi llegeix de dalt a baix, pero aquí decidim quin camí prendre usant lògica.",
                 aea: "AEA3 i AEA6 (20h)",
                 cards: [
                     {
@@ -669,7 +679,7 @@
                         type: "code",
                         content: "Llistes IMMUTABLES. No es poden canviar un cop creades.",
                         code: `spawn_point = (100, 200)\nprint(f"X: {spawn_point[0]}")\n\n# spawn_point[0] = 50 -> ERROR!\n# No pots moure el punt d'aparició!`,
-                        explanation: "S'usen parèntesis () en lloc de corxets []. Útils per a dades fixes com configuracions.",
+                        explanation: "S'usen parèntesis () en lloc de corxets []. Útils per a dades fixes como constants.",
                         runnable: true
                     },
                     {
@@ -749,15 +759,12 @@
                 ]
             },
 
-            // Keeping 'data' for legacy compatibility or summary view if needed, but menu points to specific ones now
             'data': {
                 title: "Estructures de Dades (Resum)",
                 subtitle: "Totes les col·leccions",
                 desc: "Visió general de Llistes, Tuples i Diccionaris.",
                 aea: "AEA5 i AEA8",
-                cards: [
-                    // ... existing mixed cards ...
-                ]
+                cards: []
             },
             
             'functions': {
@@ -910,7 +917,6 @@
                         alt: "Infografia Diccionaris"
                     },
                     {
-                        // Safe title with escaped single quote
                         title: "10. Llibre d'Assoliments (Sets)",
                         type: "image",
                         content: "Col·leccions sense duplicats. Màgia avançada i elements únics.",
@@ -939,9 +945,8 @@
         function switchTab(tabId) {
             // Update Navigation UI
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                // Check if it's the submenu parent button
                 if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('toggleSubmenu')) {
-                     // Do nothing for parent toggle, maintain state manually if needed or leave as is
+                     // Do nothing for parent toggle, maintain state manually
                 } else {
                     btn.classList.remove('bg-gray-800', 'text-white', 'border-r-4', 'border-green-500');
                     btn.classList.add('text-gray-300');
@@ -972,7 +977,6 @@
 
             // Show generic View or specific
             if (codexData[tabId]) {
-                // Ensure Codex View is visible first, though usually redundant with JS execution order
                 document.getElementById('codex-view').classList.remove('hidden');
                 renderCodex(tabId);
             } else {
@@ -989,7 +993,6 @@
             const data = codexData[key];
             document.getElementById('cat-title').textContent = data.title;
             
-            // Fixed: Changed from nextElementSibling to explicit ID
             const subtitleEl = document.getElementById('cat-subtitle');
             if(subtitleEl) {
                 subtitleEl.textContent = data.subtitle;
@@ -1028,9 +1031,6 @@
                 `;
 
                 if (card.type === 'code') {
-                    // --- SYNTAX HIGHLIGHTING FIX ---
-                    // Using a Tokenizer strategy to avoid nested replacement issues
-                    // 1. Identify Strings and Comments first and hide them with placeholders
                     let code = card.code;
                     const placeholders = [];
                     const save = (regex, type) => {
@@ -1043,12 +1043,10 @@
                     save(/(".*?")/g, 'string');
                     save(/#.*/g, 'comment');
 
-                    // 2. Highlight Keywords in the remaining code (safe now)
                     code = code
                         .replace(/\b(print|input|len|range|append|int|str|float|remove|insert|enumerate|keys|values|items|list|tuple|del)\b/g, '<span class="token-func">$1</span>')
                         .replace(/\b(if|else|elif|for|while|in|def|return)\b/g, '<span class="token-keyword">$1</span>');
 
-                    // 3. Restore Strings and Comments wrapped in their spans
                     placeholders.forEach((ph, i) => {
                         const classMap = { string: 'token-string', comment: 'token-comment' };
                         const html = `<span class="${classMap[ph.type]}">${ph.content}</span>`;
@@ -1093,8 +1091,6 @@
                         </ul>
                     `;
                 } else if (card.type === 'image') {
-                    // NEW IMAGE CARD RENDERER
-                    // Fix: Escape single quotes in title for the inline onerror handler
                     const safeTitle = encodeURIComponent(card.title).replace(/'/g, "%27");
                     cardHtml += `
                         <div class="bg-[#121212] p-2 rounded border border-gray-800 group relative">
@@ -1120,28 +1116,25 @@
             const outputId = `console-${key}-${index}`;
             const consoleDiv = document.getElementById(outputId);
             
-            // Fake execution logic based on card content (Hardcoded strictly for visual demo)
             let outputText = "> Executant script...\n";
             const cardData = codexData[key].cards[index];
             
             if(cardData.code.includes('print("Game Over")')) outputText += "Game Over\nTens 5 monedes";
             else if(cardData.code.includes('input')) outputText += "Nom? [Simulat: Jugador]\nHola Jugador";
             else if(cardData.code.includes('if energia > 80') && !cardData.code.includes('else')) outputText += "Atac Final!";
-            else if(cardData.code.includes('if energia > 80') && cardData.code.includes('else') && !cardData.code.includes('elif')) outputText += "Atac Bàsic"; // Case if/else with 10 energy
-            else if(cardData.code.includes('elif energia > 20')) outputText += "Atac Bàsic"; // Case if/elif/else with 50 energy
+            else if(cardData.code.includes('if energia > 80') && cardData.code.includes('else') && !cardData.code.includes('elif')) outputText += "Atac Bàsic"; 
+            else if(cardData.code.includes('elif energia > 20')) outputText += "Atac Bàsic"; 
             else if(cardData.code.includes('while')) outputText += "Et queden 3 vides\nEt queden 2 vides\nEt queden 1 vides\nHas mort.";
             
-            // Replaced generic checks with explicit content checks for new Data Structure cards
             else if(cardData.code.includes('inventari[0]')) outputText += "Espasa\nMapa";
-            else if(cardData.code.includes('loot.insert')) outputText += "['Poció', 'Or', 'Escut']"; // After insert/remove logic
-            else if(cardData.code.includes('cofre[:3]')) outputText += "Primers: ['A', 'B', 'C']\nResta: ['C', 'D', 'E']"; // Not explicitly printed in card code but simulated
+            else if(cardData.code.includes('loot.insert')) outputText += "['Poció', 'Or', 'Escut']"; 
+            else if(cardData.code.includes('cofre[:3]')) outputText += "Primers: ['A', 'B', 'C']\nResta: ['C', 'D', 'E']"; 
             else if(cardData.code.includes('spawn_point')) outputText += "X: 100";
             else if(cardData.code.includes('heroi[')) outputText += "L'heroi Link té 100 HP.";
             else if(cardData.code.includes('stats["magia"]')) outputText += "{'atk': 15, 'def': 5, 'magia': 20}";
             else if(cardData.code.includes('enumerate(inventari)')) outputText += "Slot 0: Espasa\nSlot 1: Poció\nSlot 2: Mapa";
             else if(cardData.code.includes('stats.items()')) outputText += "ATK: 10\nDEF: 5\nSPD: 8";
             else if(cardData.code.includes('assoliments = {')) outputText += "Desbloquejat: Primera Sang\nDesbloquejat: Mestre d'Espasa";
-            // New Tuple Handlers
             else if(cardData.code.includes('items_fixos')) outputText += "Espasa\nEscut";
             else if(cardData.code.includes('list(stats)')) outputText += "(15, 5)";
             else if(cardData.code.includes('boti1')) outputText += "Has trobat Or i Gemma";
@@ -1151,14 +1144,12 @@
             else if(cardData.code.includes('motxilla')) outputText += "Espasa";
             else if(cardData.code.includes('jugador')) outputText += "Link";
             else if(cardData.code.includes('curar')) outputText += "Vida actual: 70";
-            // New Handlers
             else if(cardData.code.includes('Hola, món!')) outputText += "Hola, món!";
             else if(cardData.code.includes('nom = "Anna"')) outputText += "Et dius Anna i tens 16 anys.\nTens 16 anys.\nEt dius Anna i tens 16 anys.";
             else if(cardData.code.includes('input("Escriu el teu nom: ")')) outputText += "Benvingut, Jugador!\nEdat? [Simulat: 15]";
             else if(cardData.code.includes('input("Quants anys tens? ")')) outputText += "L'any vinent tindràs 17\nFas 1.75 metres.";
             else if(cardData.code.includes('input("Nom: ")')) outputText += "Nom: Marc\nEdat: 18\nAlçada (m): 1.75\nEt dius Marc, tens 18 anys i fas 1.75m.";
             
-            // Strings Specific Handlers (NEW)
             else if(cardData.code.includes('vas néixer el')) outputText += "Hola Dani, vas néixer el 1987";
             else if(cardData.code.includes('"*" * 10')) outputText += "**********\nAAA\nLlargada: 9";
             else if(cardData.code.includes('Kimetsu')) outputText += "Primera: K\nTercera: m\nÚltima: u";
@@ -1166,7 +1157,6 @@
             else if(cardData.code.includes('missatge_secret')) outputText += "XtXc Xeri\nATAC AERI";
             else if(cardData.code.includes('isdigit')) outputText += "Password numèric OK\nTió trobat a la posició: 5";
 
-            // Loop Specific Handlers
             else if(cardData.code.includes('paraula = "QUEST"')) outputText += "Desxifrant: Q\nDesxifrant: U\nDesxifrant: E\nDesxifrant: S\nDesxifrant: T";
             else if(cardData.code.includes('range(1, 4)')) outputText += "Entrant al Nivell 1\nEntrant al Nivell 2\nEntrant al Nivell 3\nDisparar!\nDisparar!\nDisparar!";
             else if(cardData.code.includes('range(10, 0, -2)')) outputText += "Compte enrere: 10\nCompte enrere: 8\nCompte enrere: 6\nCompte enrere: 4\nCompte enrere: 2\nENLAIRAMENT!";
@@ -1175,7 +1165,6 @@
             else if(cardData.code.includes('opcio != "sortir"')) outputText += "1. Jugar | 2. Sortir\nTria: [Simulat: 1]\nComença la partida!\n1. Jugar | 2. Sortir\nTria: [Simulat: 2]";
             else if(cardData.code.includes('sep="-')) outputText += "1-2-3\nCarregant...Fet!";
 
-            // Function Specific Handlers (NEW)
             else if(cardData.code.includes('invocar_arma()')) outputText += "Has equipat l'Espasa Mestra!";
             else if(cardData.code.includes('atacar("Goblin", 10)')) outputText += "Atacant Goblin amb 10 punts!\nAtacant Drac amb 50 punts!";
             else if(cardData.code.includes('mostrar_or')) outputText += "Fas 15 de mal!";
@@ -1197,26 +1186,23 @@
         function calculateGrades() {
             const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
             
-            // RA1 Calculation: QRA1=10*Pt1+10*Pt2+10*Pt3+10*Pt4+60*P1 (Note: Input 0-10, Formula implies weights 0.1, 0.1, 0.1, 0.1, 0.6)
-            // Wait, PDF says: 10*Pt1... if Pt1 is 0-10, 10*10 = 100. So the result is 0-100 scale? Or maybe weights are percentages?
-            // "10% Pt1". So if Pt1 is 8, contribution is 0.8. 
-            // Formula in PDF: 10*Pt1 + ... This suggests Pt is 0-1 scale OR result is 0-100. 
-            // Let's assume Inputs are 0-10 and we want result 0-10.
-            // Then formula is: (Pt1*0.1) + (Pt2*0.1) + (Pt3*0.1) + (Pt4*0.1) + (P1*0.6)
-            
+            // RA1 Calculation
             const ra1 = (getVal('pt1')*0.1) + (getVal('pt2')*0.1) + (getVal('pt3')*0.1) + (getVal('pt4')*0.1) + (getVal('p1')*0.6);
             document.getElementById('ra1-result').textContent = ra1.toFixed(2);
             document.getElementById('ra1-result').className = `text-2xl font-bold pixel-font ${ra1 >= 5 ? 'text-green-500' : 'text-red-500'}`;
 
-            // RA2 Calculation: QRA2=10*Pt5+10*Pt6+10*Pt7+10*Pt8+20*P2+40*Pr1
-            const ra2 = (getVal('pt5')*0.1) + (getVal('pt6')*0.1) + (getVal('pt7')*0.1) + (getVal('pt8')*0.1) + (getVal('p2')*0.2) + (getVal('pr1')*0.4);
+            // --- DESGLOSE PROJECTE PR1 ---
+            // 20% Treball/Memòria + 80% Validació/Defensa del projecte
+            const pr1Treball = getVal('pr1_treball');
+            const pr1Validacio = getVal('pr1_validacio');
+            const pr1Combined = (pr1Treball * 0.20) + (pr1Validacio * 0.80);
+
+            // RA2 Calculation: QRA2=10*Pt5+10*Pt6+10*Pt7+10*Pt8+20*P2+40*Pr1 (Pr1 is now pr1Combined)
+            const ra2 = (getVal('pt5')*0.1) + (getVal('pt6')*0.1) + (getVal('pt7')*0.1) + (getVal('pt8')*0.1) + (getVal('p2')*0.2) + (pr1Combined * 0.4);
             document.getElementById('ra2-result').textContent = ra2.toFixed(2);
             document.getElementById('ra2-result').className = `text-2xl font-bold pixel-font ${ra2 >= 5 ? 'text-green-500' : 'text-red-500'}`;
 
-            // Total MP: Weighted average of hours?
-            // RA1: 24h, RA2: 42h. Total 66h.
-            // Weight RA1 = 24/66 ≈ 0.36
-            // Weight RA2 = 42/66 ≈ 0.64
+            // Total MP: Weighted average of hours (24h for RA1, 42h for RA2)
             const total = (ra1 * (24/66)) + (ra2 * (42/66));
             
             const display = document.getElementById('final-grade-display');
@@ -1259,7 +1245,6 @@
             });
         }
 
-
         // --- INIT ---
         window.onload = function() {
             // Hours Chart
@@ -1295,25 +1280,5 @@
         };
 
     </script>
-    
-    <!-- Chosen Palette: Dark Mode with Neon Green (#00E676) and Cyber Purple (#BB86FC) accents. -->
-    <!-- Application Structure Plan:
-         1. Layout: Sidebar + Main Content (Dashboard/SPA pattern). Reasons: Allows quick switching between reference categories (variables, loops, etc.) which is critical for a "Cheat Sheet" use case.
-         2. Content:
-            - Dashboard: Overview of the module (SMX Option 1 PDF data) to give context on hours/evaluation.
-            - Codex Sections: Direct implementation of the 'guia_referencia_python.md' content, categorized for easy access. Interactive code snippets added to make it engaging ("Gamified").
-            - Calculator: Tool to ease the anxiety of "How do I pass?" based on the complex formulas in the PDF.
-         3. Interactions:
-            - Click-to-Run simulation for code examples.
-            - Real-time grade calculation.
-            - Tabbed navigation for zero-latency browsing.
-    -->
-    <!-- Visualization & Content Choices:
-         - Chart.js Doughnut: Used for syllabus hours breakdown. Goal: Show effort distribution. Justification: Easy to read "how much time we spend on X".
-         - Chart.js Bar: Used for Grade Visualization. Goal: Show pass/fail status clearly.
-         - Syntax Highlighting (HTML/CSS): Used instead of SVG/Images for code. Goal: Accessibility and clean scaling.
-         - Interactive 'Console': Simulates Python output without needing a backend, reinforcing the "learning by doing" concept.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </body>
 </html>
